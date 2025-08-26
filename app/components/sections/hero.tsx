@@ -1,9 +1,6 @@
 "use client"
 
-import { Title } from "../ui/title"
-import { Button } from "../ui/button"
 import { Divider } from "../ui/divider"
-import { Eyebrow } from "../ui/eyebrow"
 
 export function Hero() {
   return (
@@ -80,19 +77,35 @@ export function Hero() {
         style={{ background: '#231405' }}
       />
 
+      {/* Sparq Logo/Brand in upper left */}
+      <div className="relative z-10 px-4 sm:px-8 lg:px-16 xl:px-[165px] py-8">
+        <h1
+          className="font-display text-xl md:text-2xl lg:text-3xl xl:text-4xl"
+          style={{
+            color: '#F3F4F5',
+            fontFamily: 'Satoshi',
+            fontStyle: 'normal',
+            fontWeight: 900,
+            lineHeight: '90%',
+            letterSpacing: '-1.297px'
+          }}
+        >
+          Sparq
+        </h1>
+      </div>
+
       {/* Main Content */}
-      <div className="relative z-20 flex-1 flex items-end">
-        <div className="container-custom pb-20 w-full">
+      <div className="relative z-10 flex-1 flex items-end">
+        <div className="px-4 sm:px-8 lg:px-16 xl:px-[165px] pb-20 z-11 w-full">
           <div className="text-left">
             {/* Main Headline */}
-            <Title 
-              variant="hero"
-              className="mb-8"
+            <h2
+              className="text-2xl md:text-3xl lg:text-5xl xl:text-7xl font-black mb-18 font-display"
               style={{ lineHeight: '100%' }}
             >
               Move Fast. Ship Even Faster. AI-accelerated product execution for
               when speed isn't optional.
-            </Title>
+            </h2>
 
             {/* Divider */}
             <Divider />
@@ -101,21 +114,27 @@ export function Hero() {
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 xl:gap-16 items-baseline">
               {/* Left: CTA Button */}
               <div className="xl:col-span-2">
-                <Button 
-                  variant="primary"
-                  size="xl"
+                <p
+                  className="text-sm uppercase text-gray-600"
+                  style={{ lineHeight: '110%', letterSpacing: '6px' }}
+                >
+                </p>
+                <a
                   href="/case-studies/using-ai-to-solve-a-stadiums-biggest-entry-headache"
-                  className="font-semibold"
+                  className="bg-brand-cta hover:bg-brand-cta-hover text-black font-semibold px-6 py-3 rounded-lg text-md md:text-lg lg:text-xl xl:text-2xl transition-all duration-200 inline-block"
                 >
                   Explore an AI Success Story
-                </Button>
+                </a>
               </div>
 
               {/* Right: Label */}
               <div className="xl:col-span-1 hidden lg:block">
-                <Eyebrow className="text-gray-200 text-lg md:text-xl lg:text-2xl">
+                <p
+                  className="text-md md:text-lg lg:text-xl xl:text-2xl text-gray-200"
+                  style={{ letterSpacing: '0.05em' }}
+                >
                   SOLUTIONS WITH IMPACT
-                </Eyebrow>
+                </p>
               </div>
             </div>
           </div>

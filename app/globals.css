@@ -127,9 +127,41 @@ body {
   height: 31.25rem;
 }
 
+/* Custom margin utilities */
+.mb-18 {
+  margin-bottom: 4.5rem;
+}
+
+/* Custom padding utilities */
+.py-33 {
+  padding-top: 8.25rem;
+  padding-bottom: 8.25rem;
+}
+
+.py-30 {
+  padding-top: 7.5rem;
+  padding-bottom: 7.5rem;
+}
+
 /* Fractional width utilities */
 .max-w-28\/32 {
   max-width: 87.5%;
+}
+
+.max-w-30\/32 {
+  max-width: 93.75%;
+}
+
+.max-w-26\/32 {
+  max-width: 81.25%;
+}
+
+.max-w-25\/32 {
+  max-width: 78.125%;
+}
+
+.max-w-31\/32 {
+  max-width: 96.875%;
 }
 
 .max-w-24\/32 {

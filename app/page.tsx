@@ -5,6 +5,7 @@ import { Hero } from "./components/sections/hero"
 import { ValueProposition } from "./components/sections/value-proposition"
 import { Stats } from "./components/sections/stats"
 import { Features } from "./components/sections/features"
+import { Methodology } from "./components/sections/methodology"
 import { Team } from "./components/sections/team"
 import { Footer } from "./components/layout/footer"
 import { Modal } from "./components/ui/Modal"
@@ -29,6 +30,7 @@ export default function Home() {
       <ValueProposition />
       <Stats />
       <Features />
+      <Methodology />
       <Team />
       <Footer onOpenContactModal={openModal} />
       
