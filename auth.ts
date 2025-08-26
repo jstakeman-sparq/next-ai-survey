@@ -1,6 +1,7 @@
 import NextAuth from "next-auth"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  secret: process.env.AUTH_SECRET,
   providers: [
     {
       id: "jumpcloud",

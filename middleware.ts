@@ -1,6 +1,13 @@
 import { auth } from "@/auth"
 
 export default auth((req) => {
+  // Allow access to login page and auth routes
+  if (req.nextUrl.pathname === "/admin/login" || 
+      req.nextUrl.pathname.startsWith("/api/auth")) {
+    return
+  }
+  
+  // Redirect unauthenticated users to login
   if (!req.auth && req.nextUrl.pathname.startsWith("/admin")) {
     const newUrl = new URL("/admin/login", req.nextUrl.origin)
     return Response.redirect(newUrl)
