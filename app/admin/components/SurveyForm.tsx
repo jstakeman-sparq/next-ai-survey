@@ -2,28 +2,38 @@
 
 import { useState, useEffect } from "react"
 import { generateShortCode } from "@/lib/short-code"
+import { useSession } from "../../hooks/useSession"
 
 interface SurveyFormData {
-  title: string
-  description: string
   shortCode: string
-  status: 'active' | 'inactive'
+  createdBy: string
+  createdFor: string
+  companyName: string
 }
 
-export default function SurveyForm() {
+interface SurveyFormProps {
+  onSurveyCreated?: () => void
+}
+
+export default function SurveyForm({ onSurveyCreated }: SurveyFormProps) {
+  const session = useSession()
   const [formData, setFormData] = useState<SurveyFormData>({
-    title: '',
-    description: '',
     shortCode: '',
-    status: 'active'
+    createdBy: '',
+    createdFor: '',
+    companyName: ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
 
-  // Generate initial short code
+  // Generate initial short code and pre-fill createdBy with session email
   useEffect(() => {
-    setFormData(prev => ({ ...prev, shortCode: generateShortCode() }))
-  }, [])
+    setFormData(prev => ({
+      ...prev,
+      shortCode: generateShortCode(),
+      createdBy: session?.user?.email || ''
+    }))
+  }, [session])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,18 +41,42 @@ export default function SurveyForm() {
     setMessage(null)
 
     try {
-      // For now, we'll just simulate the API call
-      // TODO: Replace with actual Amplify GraphQL mutation
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      const { Amplify } = await import('aws-amplify')
+      const { generateClient } = await import('aws-amplify/data')
+      const outputs = await import('@/amplify_outputs.json')
+      
+      // Configure Amplify
+      Amplify.configure(outputs.default)
+      const client = generateClient()
+
+      const { errors } = await client.models.Survey.create({
+        title: '2025 AI Readiness Survey',
+        type: '2025AIReadinessSurvey',
+        shortCode: formData.shortCode,
+        status: 'sent',
+        createdBy: formData.createdBy,
+        createdFor: formData.createdFor,
+        companyName: formData.companyName
+      })
+
+      if (errors) {
+        console.error('GraphQL errors:', errors)
+        setMessage({ type: 'error', text: 'Failed to create survey. Please try again.' })
+        return
+      }
       
       setMessage({ type: 'success', text: 'Survey created successfully!' })
       setFormData({
-        title: '',
-        description: '',
         shortCode: generateShortCode(),
-        status: 'active'
+        createdBy: session?.user?.email || '',
+        createdFor: '',
+        companyName: ''
       })
+      
+      // Call the callback to refresh the survey list
+      onSurveyCreated?.()
     } catch (error) {
+      console.error('Error creating survey:', error)
       setMessage({ type: 'error', text: 'Failed to create survey. Please try again.' })
     } finally {
       setIsSubmitting(false)
@@ -56,39 +90,57 @@ export default function SurveyForm() {
   return (
     <div className="bg-white shadow rounded-lg p-6">
       <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
+          <h3 className="text-sm font-medium text-blue-900 mb-1">Survey Details</h3>
+          <p className="text-sm text-blue-700">Title: 2025 AI Readiness Survey</p>
+          <p className="text-sm text-blue-700">Type: AI Readiness Assessment</p>
+          <p className="text-sm text-blue-700">Status: Will be set to "Sent" upon creation</p>
+        </div>
+
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-            Survey Title *
+          <label htmlFor="createdBy" className="block text-sm font-medium text-gray-700">
+            Created By (Email) *
           </label>
           <input
-            type="text"
-            id="title"
+            type="email"
+            id="createdBy"
             required
-            minLength={3}
-            maxLength={100}
-            value={formData.title}
-            onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+            value={formData.createdBy}
+            onChange={(e) => setFormData(prev => ({ ...prev, createdBy: e.target.value }))}
             className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm px-3 py-2 border"
-            placeholder="Enter survey title"
+            placeholder="admin@company.com"
           />
         </div>
 
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-            Description
+          <label htmlFor="createdFor" className="block text-sm font-medium text-gray-700">
+            Created For (Email) *
           </label>
-          <textarea
-            id="description"
-            rows={3}
-            maxLength={500}
-            value={formData.description}
-            onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+          <input
+            type="email"
+            id="createdFor"
+            required
+            value={formData.createdFor}
+            onChange={(e) => setFormData(prev => ({ ...prev, createdFor: e.target.value }))}
             className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm px-3 py-2 border"
-            placeholder="Optional description for the survey"
+            placeholder="recipient@company.com"
           />
-          <p className="mt-1 text-sm text-gray-500">
-            {formData.description.length}/500 characters
-          </p>
+        </div>
+
+        <div>
+          <label htmlFor="companyName" className="block text-sm font-medium text-gray-700">
+            Company Name *
+          </label>
+          <input
+            type="text"
+            id="companyName"
+            required
+            maxLength={100}
+            value={formData.companyName}
+            onChange={(e) => setFormData(prev => ({ ...prev, companyName: e.target.value }))}
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm px-3 py-2 border"
+            placeholder="Enter company name"
+          />
         </div>
 
         <div>
@@ -116,20 +168,6 @@ export default function SurveyForm() {
           </p>
         </div>
 
-        <div>
-          <label htmlFor="status" className="block text-sm font-medium text-gray-700">
-            Status
-          </label>
-          <select
-            id="status"
-            value={formData.status}
-            onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value as 'active' | 'inactive' }))}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm px-3 py-2 border"
-          >
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
-        </div>
 
         {message && (
           <div className={`rounded-md p-4 ${
@@ -143,7 +181,7 @@ export default function SurveyForm() {
 
         <button
           type="submit"
-          disabled={isSubmitting || !formData.title.trim()}
+          disabled={isSubmitting || !formData.createdBy.trim() || !formData.createdFor.trim() || !formData.companyName.trim()}
           className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
         >
           {isSubmitting ? 'Creating...' : 'Create Survey'}

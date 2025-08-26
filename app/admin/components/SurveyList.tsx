@@ -1,45 +1,68 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { Amplify } from 'aws-amplify'
+import { generateClient } from 'aws-amplify/data'
+import type { Schema } from '@/amplify/data/resource'
+import outputs from '@/amplify_outputs.json'
+
+// Configure Amplify
+Amplify.configure(outputs)
+const client = generateClient<Schema>()
 
 interface Survey {
   id: string
   title: string
+  type?: string
   shortCode: string
-  status: 'active' | 'inactive'
+  status: 'sent' | 'started' | 'completed'
   createdAt: string
+  createdBy: string
+  createdFor: string
+  companyName: string
 }
 
 export default function SurveyList() {
   const [surveys, setSurveys] = useState<Survey[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    // Simulate loading surveys
-    // TODO: Replace with actual Amplify GraphQL query
-    const loadSurveys = async () => {
-      await new Promise(resolve => setTimeout(resolve, 1000))
+  const loadSurveys = async () => {
+    try {
+      setIsLoading(true)
+      setError(null)
       
-      // Mock data for now
-      setSurveys([
-        {
-          id: '1',
-          title: 'AI Readiness Assessment Q1 2025',
-          shortCode: 'ABC123',
-          status: 'active',
-          createdAt: '2025-01-15T10:00:00Z'
-        },
-        {
-          id: '2', 
-          title: 'Digital Transformation Survey',
-          shortCode: 'XYZ789',
-          status: 'inactive',
-          createdAt: '2025-01-10T14:30:00Z'
-        }
-      ])
+      const { data: surveyData, errors } = await client.models.Survey.list()
+      
+      if (errors) {
+        console.error('GraphQL errors:', errors)
+        setError('Failed to load surveys')
+        return
+      }
+
+      // Transform the data to match our interface
+      const transformedSurveys: Survey[] = surveyData.map(survey => ({
+        id: survey.id,
+        title: survey.title || '',
+        type: survey.type || undefined,
+        shortCode: survey.shortCode || '',
+        status: (survey.status as 'sent' | 'started' | 'completed') || 'sent',
+        createdAt: survey.createdAt,
+        createdBy: survey.createdBy || 'Unknown',
+        createdFor: survey.createdFor || 'Unknown',
+        companyName: survey.companyName || 'Unknown'
+      }))
+
+      setSurveys(transformedSurveys)
+    } catch (err) {
+      console.error('Error loading surveys:', err)
+      setError('Failed to load surveys')
+    } finally {
       setIsLoading(false)
     }
+  }
 
+  useEffect(() => {
     loadSurveys()
   }, [])
 
@@ -51,6 +74,34 @@ export default function SurveyList() {
           <div className="h-4 bg-gray-200 rounded w-1/2"></div>
           <div className="h-4 bg-gray-200 rounded w-2/3"></div>
         </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="bg-white shadow rounded-lg p-6 text-center">
+        <svg
+          className="mx-auto h-12 w-12 text-red-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.314 14.5c-.77.833-.192 2.5 1.732 2.5z"
+          />
+        </svg>
+        <h3 className="mt-2 text-sm font-medium text-gray-900">Error loading surveys</h3>
+        <p className="mt-1 text-sm text-gray-500">{error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-3 inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+        >
+          Try again
+        </button>
       </div>
     )
   }
@@ -81,8 +132,28 @@ export default function SurveyList() {
 
   return (
     <div className="bg-white shadow rounded-lg">
-      <div className="px-6 py-4 border-b border-gray-200">
+      <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
         <h3 className="text-lg font-medium text-gray-900">Recent Surveys</h3>
+        <button
+          onClick={() => loadSurveys()}
+          disabled={isLoading}
+          className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+        >
+          <svg
+            className={`-ml-0.5 mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+            />
+          </svg>
+          Refresh
+        </button>
       </div>
       <ul className="divide-y divide-gray-200">
         {surveys.map((survey) => (
@@ -92,17 +163,31 @@ export default function SurveyList() {
                 <h4 className="text-sm font-medium text-gray-900 truncate">
                   {survey.title}
                 </h4>
+                <p className="text-sm font-medium text-blue-700">
+                  {survey.companyName}
+                </p>
+                {survey.type && (
+                  <p className="text-sm text-gray-600">
+                    Type: {survey.type}
+                  </p>
+                )}
                 <p className="text-sm text-gray-500">
                   Short Code: <span className="font-mono font-medium">{survey.shortCode}</span>
                 </p>
+                <div className="flex space-x-4 text-xs text-gray-400">
+                  <span>From: {survey.createdBy}</span>
+                  <span>To: {survey.createdFor}</span>
+                </div>
                 <p className="text-xs text-gray-400">
                   Created: {new Date(survey.createdAt).toLocaleDateString()}
                 </p>
               </div>
               <div className="flex items-center space-x-2">
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                  survey.status === 'active' 
-                    ? 'bg-green-100 text-green-800' 
+                  survey.status === 'completed' 
+                    ? 'bg-green-100 text-green-800'
+                    : survey.status === 'started'
+                    ? 'bg-blue-100 text-blue-800' 
                     : 'bg-gray-100 text-gray-800'
                 }`}>
                   {survey.status}

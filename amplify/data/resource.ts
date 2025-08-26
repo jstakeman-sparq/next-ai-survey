@@ -7,25 +7,18 @@ specifies that any unauthenticated user can "create", "read", "update",
 and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
-  Todo: a
-    .model({
-      content: a.string(),
-    })
-    .authorization((allow) => [allow.publicApiKey()]),
-  
   Survey: a
     .model({
       title: a.string().required(),
-      description: a.string(),
+      type: a.string(),
       shortCode: a.string().required(),
-      status: a.enum(['active', 'inactive']),
-      createdBy: a.string().required(),
-      responses: a.hasMany('SurveyResponse', 'surveyId'),
+      status: a.enum(['sent', 'started', 'completed']),
+      createdBy: a.email().required(),
+      createdFor: a.email().required(),
+      companyName: a.string().required(),
+      responses: a.hasOne('SurveyResponse', 'surveyId'),
     })
-    .authorization((allow) => [
-      allow.publicApiKey().to(['read']),
-      allow.authenticated().to(['create', 'update', 'delete'])
-    ]),
+    .authorization((allow) => [allow.publicApiKey()]),
     
   SurveyResponse: a
     .model({
