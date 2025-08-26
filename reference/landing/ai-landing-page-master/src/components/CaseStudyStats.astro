@@ -1,0 +1,64 @@
+---
+export interface Props {
+  keyHighlights: Array<{
+    value: string;
+    description: string;
+  }>;
+}
+
+const { keyHighlights } = Astro.props;
+---
+
+<section class="bg-[#F9F7F5] py-16 lg:py-24">
+  <div class="px-4 sm:px-8 lg:px-16 xl:px-[165px]">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-16 items-start">
+      <!-- Left Column: Key Highlights and Insights -->
+      <div class="lg:col-span-1">
+        <!-- Header with Key Highlights at top, Insights below -->
+        <div class="mb-6">
+          <h3 class="text-lg sm:text-xl lg:text-[22px] font-bold text-[#100C08] leading-[29.70px] mb-2">
+            Key Highlights
+          </h3>
+          <p class="text-sm uppercase text-[#1E1E1E] font-medium tracking-[4.20px] leading-[18.20px]">
+            Insights
+          </p>
+        </div>
+        
+        <!-- Desktop: Single green box with stats contained in left column -->
+        <div class="hidden lg:block bg-[#B8F0A1] rounded p-6 lg:p-8">
+          <div class="flex flex-col gap-8">
+            {keyHighlights.map((highlight) => (
+              <div class="flex flex-col">
+                <div class="text-[60px] lg:text-[80px] font-light text-[#16110F] leading-[90%] mb-2">
+                  {highlight.value}
+                </div>
+                <div class="text-sm lg:text-base font-bold text-[#16110F] leading-[130%]">
+                  {highlight.description}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        <!-- Mobile: Stack stats in rows -->
+        <div class="flex flex-col sm:grid sm:grid-cols-1 gap-6 lg:hidden">
+          {keyHighlights.map((highlight) => (
+            <div class="bg-[#B8F0A1] rounded p-6 flex flex-col">
+              <div class="text-[60px] font-light text-[#16110F] leading-[90%] mb-2">
+                {highlight.value}
+              </div>
+              <div class="text-sm font-bold text-[#16110F] leading-[130%]">
+                {highlight.description}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Right Column: Empty on desktop to allow content to start at top -->
+      <div class="lg:col-span-2 hidden lg:block">
+        <!-- This column is intentionally empty to allow CaseStudyContent to start at the top -->
+      </div>
+    </div>
+  </div>
+</section>

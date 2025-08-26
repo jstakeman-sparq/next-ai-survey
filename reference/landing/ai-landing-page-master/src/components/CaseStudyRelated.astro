@@ -1,0 +1,53 @@
+---
+export interface Props {
+  relatedArticles: Array<{
+    title: string;
+    date: string;
+    readTime: string;
+    tag: string;
+    slug: string;
+  }>;
+}
+
+const { relatedArticles } = Astro.props;
+---
+
+<section class="bg-[#F9F7F5] py-16 lg:py-24">
+  <div class="px-4 sm:px-8 lg:px-16 xl:px-[165px]">
+    <div class="max-w-6xl mx-auto">
+      <!-- Section Header -->
+      <div class="mb-12 lg:mb-16">
+        <p class="text-sm uppercase text-[#1E1E1E] font-medium tracking-[4.20px] leading-[18.20px] mb-8">
+          Related
+        </p>
+      </div>
+
+      <!-- Articles Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+        {relatedArticles.map((article) => (
+          <article class="flex flex-col">
+            <!-- Tag -->
+            <div class="mb-4">
+              <span class="px-3 py-2 bg-[rgba(241,139,80,0.20)] text-[#DD5539] text-xs font-bold uppercase rounded tracking-wide">
+                {article.tag}
+              </span>
+            </div>
+            
+            <!-- Title -->
+            <h3 class="text-xl sm:text-2xl lg:text-[30px] font-bold text-[#100C08] leading-[125%] lg:leading-[37.50px] mb-4 lg:mb-6">
+              <a href={`/case-studies/${article.slug}`} class="hover:text-[#DD5539] transition-colors">
+                {article.title}
+              </a>
+            </h3>
+            
+            <!-- Meta Info -->
+            <div class="text-xs sm:text-sm text-[#1E1E1E] font-medium uppercase tracking-[3.90px] leading-[16.90px] mt-auto">
+              <span>{article.date} - </span>
+              <span class="font-bold">{article.readTime}</span>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

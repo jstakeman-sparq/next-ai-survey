@@ -1,0 +1,187 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@custom-variant inview (&:is(.inview *));
+
+:root {
+  --background: #f9f7f5;
+  --foreground: #16110f;
+}
+
+@theme inline {
+  /* Base colors */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* Neutral light */
+  --color-neutral-light-100: #f9f7f5;
+  --color-neutral-light-200: #f2ecea;
+  --color-neutral-light-300: #ebe5e2;
+  --color-neutral-light-400: #d9d1ce;
+  --color-neutral-light-500: #b8b0ad;
+
+  /* Neutral dark */
+  --color-neutral-dark-100: #71635c;
+  --color-neutral-dark-200: #51453f;
+  --color-neutral-dark-300: #392e27;
+  --color-neutral-dark-400: #231a17;
+  --color-neutral-dark-500: #16110f;
+
+  /* Accent */
+  --color-accent-100: #e3eed8;
+  --color-accent-200: #b8f0a1;
+
+  /* Forest green */
+  --color-forest-100: #d8ded8;
+  --color-forest-200: #adc0ad;
+  --color-forest-300: #667e66;
+  --color-forest-400: #3c4e3c;
+  --color-forest-500: #252d25;
+
+  /* Rust orange */
+  --color-rust-100: #f9ddd8;
+  --color-rust-200: #f0ab9d;
+  --color-rust-300: #e75437;
+  --color-rust-400: #a23f2b;
+  --color-rust-500: #732e1f;
+
+  /* System colors */
+  --color-blue: #545cb1;
+  --color-light-blue: #92b5d9;
+  --color-pink: #dd5266;
+  --color-red: #b5445c;
+  --color-purple: #705a8e;
+  --color-yellow: #f2c256;
+  --color-green: #c3da68;
+
+  /* Font-size */
+  --text-stats: 5.625rem; /* 90px */
+  --text-stats--line-height: 1.15; /* 115% */
+  --text-stats--letter-spacing: -0.02em;
+
+  --text-hero: 4.25rem; /* 68px */
+  --text-hero--line-height: 1.15; /* 115% */
+  --text-hero--letter-spacing: -0.03em;
+
+  --text-display: 3.5rem; /* 56px */
+  --text-display--line-height: 1.1; /* 110% */
+  --text-display--letter-spacing: -0.02em;
+
+  --text-h1: 2.5rem; /* 40px */
+  --text-h1--line-height: 1.2; /* 120% */
+  --text-h1--letter-spacing: -0.01em;
+
+  --text-h2: 2rem; /* 32px */
+  --text-h2--line-height: 1.25; /* 125% */
+  --text-h2--letter-spacing: -0.01em;
+
+  --text-lead: 1.375rem; /* 22px */
+  --text-lead--line-height: 1.35; /* 135% */
+  --text-lead--letter-spacing: -0.02em;
+
+  /* shadcn/ui overrides */
+  --color-muted-foreground: var(--color-neutral-dark-100);
+  --color-destructive: var(--color-rust-300);
+  --color-popover: var(--color-neutral-light-100);
+  --color-popover-foreground: var(--color-neutral-dark-500);
+  --color-input: var(--color-neutral-light-500);
+  --color-ring: var(--color-neutral-dark-300);
+  --color-border: var(--color-neutral-light-500);
+  --color-accent: var(--color-accent-200);
+  --color-accent-foreground: var(--color-neutral-dark-500);
+}
+
+@layer base {
+  html {
+    @apply antialiased;
+    font-size: 15px;
+  }
+
+  @media (min-width: 1401px) {
+    html {
+      font-size: 16px;
+    }
+  }
+
+  @media (min-width: 1921px) {
+    html {
+      font-size: 17px;
+    }
+  }
+
+  @media (min-width: 2561px) {
+    html {
+      font-size: 18px;
+    }
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@utility container {
+  @apply mx-auto w-full max-w-none px-4 md:px-8 lg:px-12 xl:px-16 2xl:px-32;
+}
+
+@theme inline {
+  --animate-marquee: marquee var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes marquee-vertical {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
+}
+
+@theme inline {
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+@utility noise {
+  position: relative;
+  --noise-opacity: 1;
+  --noise-blend-mode: screen;
+  --noise-color: var(--color-neutral-dark-500);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cfilter id='noise' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch' result='noise'/%3E%3CfeColorMatrix in='noise' type='luminanceToAlpha' result='alphaNoise'/%3E%3CfeComponentTransfer in='alphaNoise' result='contrastedAlpha'%3E%3CfeFuncA type='discrete' tableValues='0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'/%3E%3C/feComponentTransfer%3E%3CfeFlood flood-color='rgba(113, 99, 92, 0.3)' result='colorFlood'/%3E%3CfeComposite operator='in' in='colorFlood' in2='contrastedAlpha'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    mix-blend-mode: var(--noise-blend-mode);
+    opacity: var(--noise-opacity);
+  }
+}

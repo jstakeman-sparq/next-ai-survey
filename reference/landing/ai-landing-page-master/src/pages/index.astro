@@ -1,0 +1,21 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import ValueProposition from "../components/ValueProposition.astro";
+import StatsSection from "../components/StatsSection.astro";
+import FeaturesSection from "../components/FeaturesSection.astro";
+import ProductSection from "../components/ProductSection.astro";
+import TeamSection from "../components/TeamSection.astro";
+import Footer from "../components/Footer.astro";
+export const prerender = true;
+---
+
+<BaseLayout>
+  <Hero />
+  <ValueProposition />
+  <StatsSection />
+  <FeaturesSection />
+  <ProductSection />
+  <TeamSection />
+  <Footer />
+</BaseLayout>

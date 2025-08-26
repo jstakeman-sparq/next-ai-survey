@@ -1,0 +1,166 @@
+{
+    "questions": [
+      {
+        "id": 1,
+        "dimension": "AI Tooling & Current Usage",
+        "question": "Thinking about the actual AI tools available to your employees today—like AI assistants or copilots—which of these statements best describes your company's environment?",
+        "options": [
+          {
+            "value": "A",
+            "text": "Unofficial Use",
+            "description": "No official tools are provided; we assume some use of public AI websites."
+          },
+          {
+            "value": "B", 
+            "text": "Informal Testing",
+            "description": "A few tools are being tested informally by a small, uncoordinated group of users."
+          },
+          {
+            "value": "C",
+            "text": "Formal Piloting", 
+            "description": "We are running formal, approved pilots of specific AI tools for a defined business purpose."
+          },
+          {
+            "value": "D",
+            "text": "Enterprise-Wide Rollout",
+            "description": "An integrated suite of enterprise-grade AI tools is widely available and embedded in our standard workflows."
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "dimension": "Use Cases & Business Value",
+        "question": "When it comes to applying AI to solve specific business problems, which of these statements sounds most like your current approach?",
+        "options": [
+          {
+            "value": "A",
+            "text": "No Defined Use Cases",
+            "description": "We have not identified any specific business problems and have not yet connected AI to business value."
+          },
+          {
+            "value": "B",
+            "text": "Brainstorming Ideas",
+            "description": "We have brainstormed potential ideas but lack a formal business case or ROI for them."
+          },
+          {
+            "value": "C",
+            "text": "Active Pilots with Business Goals",
+            "description": "We have active pilot projects underway with clearly defined and measurable business goals."
+          },
+          {
+            "value": "D",
+            "text": "Portfolio of Deployed Solutions",
+            "description": "We manage a portfolio of deployed AI solutions and actively measure their business impact."
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "dimension": "Data Readiness",
+        "question": "Regarding the data needed to power AI, which of these descriptions best fits your organization's data environment?",
+        "options": [
+          {
+            "value": "A",
+            "text": "Siloed & Inaccessible",
+            "description": "Our data is siloed and difficult to access, which is a major roadblock for any AI initiative."
+          },
+          {
+            "value": "B",
+            "text": "Foundational Work Underway",
+            "description": "We have foundational projects underway to improve data quality and access."
+          },
+          {
+            "value": "C",
+            "text": "Prepared for Pilots",
+            "description": "We have prepared high-quality, accessible data specifically for our current pilot projects."
+          },
+          {
+            "value": "D",
+            "text": "Mature & Centralized",
+            "description": "We have a mature, centralized data platform that provides governed, high-quality data for enterprise use."
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "dimension": "Technology & Infrastructure",
+        "question": "How prepared is your company's underlying technology architecture to support and scale new AI applications?",
+        "options": [
+          {
+            "value": "A",
+            "text": "Significant Limitations",
+            "description": "Significant technical debt or legacy systems would block any new AI deployment."
+          },
+          {
+            "value": "B",
+            "text": "Planning for Upgrades",
+            "description": "We know our infrastructure needs to be upgraded for AI, but this is not yet resourced or scheduled."
+          },
+          {
+            "value": "C",
+            "text": "Sufficient for Pilots",
+            "description": "Our current infrastructure supports our pilots, and we have a clear plan to scale if they are successful."
+          },
+          {
+            "value": "D",
+            "text": "Modern & Scalable",
+            "description": "A modern, scalable cloud architecture is in place, ready to handle enterprise-grade AI workloads."
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "dimension": "People & Culture",
+        "question": "Looking at your teams' skills and the company culture, which statement best reflects your readiness for AI-driven changes?",
+        "options": [
+          {
+            "value": "A",
+            "text": "Skills Gaps & Resistance",
+            "description": "There are significant AI skill gaps, and the company culture is generally resistant to process changes."
+          },
+          {
+            "value": "B",
+            "text": "Enthusiasts but No Formal Plan",
+            "description": "Pockets of enthusiasm for AI exist, but we have no formal training or change management plan."
+          },
+          {
+            "value": "C",
+            "text": "Dedicated Teams & Leadership Buy-in",
+            "description": "We have a dedicated team for our pilots and leadership support for the change."
+          },
+          {
+            "value": "D",
+            "text": "Established Teams & Embracing Culture",
+            "description": "We have established AI teams, a company-wide upskilling program, and a formal change management plan."
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "dimension": "Guidance & Controls for AI Use",
+        "question": "Thinking about how your teams use or might use AI tools, what level of formal guidance or controls are they operating under?",
+        "options": [
+          {
+            "value": "A",
+            "text": "No Specific Guidance",
+            "description": "Teams and individuals are using AI based on their own judgment, without any official company guidelines."
+          },
+          {
+            "value": "B",
+            "text": "Basic \"Do's and Don'ts\"",
+            "description": "General recommendations or informal guidance have been shared, but there are no formal, documented policies."
+          },
+          {
+            "value": "C",
+            "text": "Project-Specific Guardrails",
+            "description": "Clear guidelines and controls have been established for specific, approved pilot projects or tools."
+          },
+          {
+            "value": "D",
+            "text": "Clear Enterprise-Wide Policies",
+            "description": "There is a well-understood, enterprise-wide policy for responsible AI use that is actively communicated to all teams."
+          }
+        ]
+      }
+    ]
+  }

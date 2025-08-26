@@ -1,0 +1,520 @@
+---
+// AI Readiness Results Display Component
+---
+
+<section class="min-h-screen bg-brand-light">
+  <!-- Header -->
+  <div class="bg-brand-dark text-white py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <button 
+          id="back-to-survey-btn"
+          class="text-brand-cta hover:text-brand-cta-hover transition-colors"
+          title="Back to Survey"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <h1 class="text-xl md:text-2xl font-semibold">Assessment Results</h1>
+      </div>
+      <div class="text-sm text-gray-300">
+        Assessment Complete
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Container -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-8 lg:px-16 py-12">
+    <!-- Loading State -->
+    <div id="loading-state" class="text-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-orange mx-auto mb-4"></div>
+      <p class="text-gray-600">Analyzing your responses...</p>
+    </div>
+
+    <!-- Results Content -->
+    <div id="results-content" class="hidden">
+      <!-- Client Information Form -->
+      <div class="bg-white rounded-2xl shadow-lg p-8 lg:p-12 mb-8">
+        <h2 class="text-2xl lg:text-3xl font-semibold text-brand-dark mb-6">
+          Client Information
+        </h2>
+        <p class="text-gray-600 mb-6">
+          Please provide client details to generate the assessment report.
+        </p>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <label for="client-name" class="block text-sm font-medium text-gray-700 mb-2">
+              Client Company Name
+            </label>
+            <input
+              type="text"
+              id="client-name"
+              placeholder="Enter client company name"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-orange focus:border-transparent"
+            >
+          </div>
+          
+          <div>
+            <label for="client-contact" class="block text-sm font-medium text-gray-700 mb-2">
+              Client Contact Name
+            </label>
+            <input
+              type="text"
+              id="client-contact"
+              placeholder="Enter contact person name"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-orange focus:border-transparent"
+            >
+          </div>
+          
+          <div>
+            <label for="salesperson-name" class="block text-sm font-medium text-gray-700 mb-2">
+              Your Name
+            </label>
+            <input
+              type="text"
+              id="salesperson-name"
+              placeholder="Enter your name"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-orange focus:border-transparent"
+            >
+          </div>
+          
+          <div>
+            <label for="assessment-date" class="block text-sm font-medium text-gray-700 mb-2">
+              Assessment Date
+            </label>
+            <input
+              type="date"
+              id="assessment-date"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-orange focus:border-transparent"
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Cohort Result -->
+      <div class="bg-white rounded-2xl shadow-lg p-8 lg:p-12 mb-8">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl lg:text-4xl font-semibold text-brand-dark mb-4">
+            AI Readiness Assessment Result
+          </h2>
+          <p class="text-lg text-gray-600">
+            Based on the responses across six key dimensions
+          </p>
+        </div>
+
+        <!-- Cohort Display -->
+        <div id="cohort-display" class="text-center mb-8">
+          <!-- Content will be injected by JavaScript -->
+        </div>
+
+        <!-- Response Summary -->
+        <div class="bg-gray-50 rounded-xl p-6 mb-8">
+          <h3 class="text-xl font-semibold text-brand-dark mb-4">Response Summary</h3>
+          <div id="response-summary" class="grid md:grid-cols-2 gap-4">
+            <!-- Content will be injected by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Next Steps -->
+        <div id="next-steps" class="bg-brand-orange text-white rounded-xl p-8">
+          <!-- Content will be injected by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="bg-white rounded-2xl shadow-lg p-8 lg:p-12">
+        <h3 class="text-2xl font-semibold text-brand-dark mb-6">Next Steps</h3>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          <button
+            id="generate-pdf-btn"
+            class="flex items-center justify-center bg-brand-orange text-white px-6 py-4 rounded-lg font-semibold text-lg hover:bg-opacity-90 transition-colors cursor-pointer"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            Generate PDF Report
+          </button>
+          
+          <button
+            id="email-report-btn"
+            class="flex items-center justify-center border-2 border-brand-orange text-brand-orange px-6 py-4 rounded-lg font-semibold text-lg hover:bg-brand-orange hover:!text-white hover:border-brand-orange transition-colors cursor-pointer group"
+          >
+            <svg class="w-5 h-5 mr-2 stroke-brand-orange group-hover:stroke-white transition-colors" fill="none" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+            Email Report
+          </button>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-gray-200">
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a
+              href="/ai-readiness-survey"
+              class="inline-flex items-center justify-center border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              Take Another Assessment
+            </a>
+            
+            <a
+              href="/ai-readiness-check"
+              class="inline-flex items-center justify-center bg-brand-cta text-brand-dark px-6 py-3 rounded-lg font-semibold hover:bg-brand-cta-hover transition-colors"
+            >
+              AI Readiness Assessment Home
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Cohort definitions
+  const cohorts = {
+    'AI Skeptic': {
+      description: 'This client is cautious, has limited or no official tool usage, and lacks the foundational readiness across data, tech, talent, and governance.',
+      icon: `<svg class="w-16 h-16 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+      </svg>`,
+      color: 'red',
+      nextSteps: [
+        'Explore a small, low-risk Proof-of-Concept focused on a specific pain point to demonstrate tangible productivity gains.',
+        'Address the biggest questions or doubts about the value of introducing AI tools to teams.',
+        'Start with educational workshops to build AI literacy and comfort.'
+      ],
+      conversationStarters: [
+        '"What is the biggest question or doubt you have about the value of introducing AI tools to your teams?"',
+        '"Could we explore a small, low-risk Proof-of-Concept focused on a specific pain point to demonstrate tangible productivity gains?"'
+      ]
+    },
+    'AI Curious': {
+      description: 'This client is exploring tools informally and thinking about use cases. They are aware of what\'s needed but have not yet committed resources or established formal plans.',
+      icon: `<svg class="w-16 h-16 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+      </svg>`,
+      color: 'yellow',
+      nextSteps: [
+        'Build a business case around a formal pilot with the most promising tools.',
+        'Conduct a workshop to prioritize use cases and develop implementation roadmap.',
+        'Establish formal testing protocols and success metrics for AI initiatives.'
+      ],
+      conversationStarters: [
+        '"Of the tools you\'re exploring, which ones show the most promise? What feedback are you hearing from the early users?"',
+        '"A common next step is to build a business case around a formal pilot. Would a workshop to prioritize these use cases be helpful?"'
+      ]
+    },
+    'AI Ready': {
+      description: 'This client has moved beyond exploration into active, formal pilots. They have identified specific use cases, organized initial resources, and are building the foundations for broader adoption.',
+      icon: `<svg class="w-16 h-16 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+      </svg>`,
+      color: 'blue',
+      nextSteps: [
+        'Support the transition from pilot to broader rollout with change management strategies.',
+        'Address challenges in user adoption, technical integration, or change management.',
+        'Develop success metrics and measurement frameworks for pilot programs.'
+      ],
+      conversationStarters: [
+        '"As you move from a pilot to a broader rollout, what do you see as the biggest challenge—user adoption, technical integration, or change management?"',
+        '"How can we best support your team to ensure this pilot is successful and demonstrates clear value to your stakeholders?"'
+      ]
+    },
+    'AI User': {
+      description: 'This client is actively and widely deploying AI tools. They have an established ecosystem for data, tech, talent, and governance and are focused on scaling value and impact.',
+      icon: `<svg class="w-16 h-16 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+      </svg>`,
+      color: 'green',
+      nextSteps: [
+        'Focus on measuring ROI and impact on productivity and business outcomes.',
+        'Explore next-generation AI capabilities to build on top of current toolset.',
+        'Develop strategies for scaling successful AI solutions across the organization.'
+      ],
+      conversationStarters: [
+        '"Now that you have a suite of AI tools, how are you thinking about measuring their ROI and impact on productivity and business outcomes?"',
+        '"What are the next-generation AI capabilities you are exploring to build on top of your current toolset?"'
+      ]
+    }
+  };
+
+  // Question dimensions
+  const dimensions = [
+    'AI Tooling & Current Usage',
+    'Use Cases & Business Value', 
+    'Data Readiness',
+    'Technology & Infrastructure',
+    'People & Culture',
+    'Guidance & Controls for AI Use'
+  ];
+
+  // Navigate back to survey (last question)
+  function goBackToSurvey() {
+    // Navigate to the last question (question 6) with answers preserved
+    window.location.href = '/ai-readiness-survey?q=6';
+  }
+
+  // Initialize results page
+  function initResults() {
+    // Get answers from sessionStorage
+    const answersJson = sessionStorage.getItem('aiReadinessAnswers');
+    
+    if (!answersJson) {
+      // Redirect to survey if no answers found
+      window.location.href = '/ai-readiness-survey';
+      return;
+    }
+
+    const answers = JSON.parse(answersJson);
+    
+    // Clear session storage now that we have the answers
+    sessionStorage.removeItem('aiReadinessAnswers');
+    
+    // Set current date as default
+    const assessmentDateEl = document.getElementById('assessment-date') as HTMLInputElement;
+    if (assessmentDateEl) {
+      assessmentDateEl.value = new Date().toISOString().split('T')[0];
+    }
+    
+    // Analyze answers and determine cohort
+    const cohort = determineCohort(answers);
+    
+    // Display results
+    setTimeout(() => {
+      displayResults(answers, cohort);
+      const loadingState = document.getElementById('loading-state');
+      if (loadingState) {
+        loadingState.classList.add('hidden');
+      }
+      const resultsContent = document.getElementById('results-content');
+      if (resultsContent) {
+        resultsContent.classList.remove('hidden');
+      }
+    }, 1500);
+  }
+
+  // Determine AI cohort based on answers
+  function determineCohort(answers: Record<string, 'A' | 'B' | 'C' | 'D'>) {
+    const answerCounts: { [key in 'A' | 'B' | 'C' | 'D']: number } = { A: 0, B: 0, C: 0, D: 0 };
+    
+    Object.values(answers).forEach((answer) => {
+      if (answer in answerCounts) {
+        answerCounts[answer]++;
+      }
+    });
+    
+    // Find the most common answer type  
+    const predominantAnswer = Object.keys(answerCounts).reduce((a, b) => {
+      const aKey = a as keyof typeof answerCounts;
+      const bKey = b as keyof typeof answerCounts;
+      return answerCounts[aKey] > answerCounts[bKey] ? a : b;
+    });
+    
+    const cohortMap = {
+      'A': 'AI Skeptic',
+      'B': 'AI Curious', 
+      'C': 'AI Ready',
+      'D': 'AI User'
+    };
+    
+    return {
+      name: cohortMap[predominantAnswer as keyof typeof cohortMap],
+      distribution: answerCounts,
+      predominantAnswer
+    };
+  }
+
+  // Display results
+  function displayResults(answers: Record<string, 'A' | 'B' | 'C' | 'D'>, cohort: { name: string; distribution: { [key in 'A' | 'B' | 'C' | 'D']: number }; predominantAnswer: string }) {
+    const cohortInfo = cohorts[cohort.name as keyof typeof cohorts];
+    
+    // Display cohort
+    const cohortDisplayElem = document.getElementById('cohort-display');
+    if (cohortDisplayElem && cohortInfo) {
+      cohortDisplayElem.innerHTML = `
+        <div class="bg-${cohortInfo.color}-50 border-2 border-${cohortInfo.color}-200 rounded-2xl p-8 mb-6">
+          <div class="flex flex-col items-center">
+            ${cohortInfo.icon}
+            <h3 class="text-3xl font-bold text-${cohortInfo.color}-700 mt-4 mb-2">
+            ${cohort.name}
+          </h3>
+          <p class="text-lg text-${cohortInfo.color}-600 text-center max-w-2xl">
+            ${cohortInfo.description}
+          </p>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-4 gap-4 max-w-md mx-auto">
+        <div class="text-center">
+          <div class="text-2xl font-bold text-gray-700">${cohort.distribution.A}</div>
+          <div class="text-sm text-gray-500">A Responses</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-gray-700">${cohort.distribution.B}</div>
+          <div class="text-sm text-gray-500">B Responses</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-gray-700">${cohort.distribution.C}</div>
+          <div class="text-sm text-gray-500">C Responses</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-gray-700">${cohort.distribution.D}</div>
+          <div class="text-sm text-gray-500">D Responses</div>
+        </div>
+      </div>
+    `;
+    }
+
+    // Display response summary
+    const responseSummaryHtml = dimensions.map((dimension, index) => {
+      const questionId = index + 1;
+      const answer = answers[questionId];
+      return `
+        <div class="p-4 bg-white rounded-lg">
+          <div class="font-semibold text-sm text-gray-600 mb-1">${dimension}</div>
+          <div class="text-lg font-bold text-brand-dark">Answer ${answer}</div>
+        </div>
+      `;
+    }).join('');
+    
+    const responseSummaryElem = document.getElementById('response-summary');
+    if (responseSummaryElem) {
+      responseSummaryElem.innerHTML = responseSummaryHtml;
+    }
+
+    // Display next steps
+    const nextStepsElem = document.getElementById('next-steps');
+    if (nextStepsElem) {
+      nextStepsElem.innerHTML = `
+        <h3 class="text-2xl font-semibold mb-4">Recommended Next Steps</h3>
+        <ul class="space-y-3 mb-6">
+          ${cohortInfo.nextSteps.map(step => `
+            <li class="flex items-start space-x-3">
+              <svg class="w-5 h-5 mt-1 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <span>${step}</span>
+            </li>
+          `).join('')}
+        </ul>
+        <h4 class="text-xl font-semibold mb-3">Conversation Starters</h4>
+        <ul class="space-y-2">
+          ${cohortInfo.conversationStarters.map(starter => `
+            <li class="italic text-gray-100">${starter}</li>
+          `).join('')}
+        </ul>
+      `;
+    }
+    
+    // Store cohort info for PDF generation
+    (window as any).assessmentResults = {
+      answers,
+      cohort,
+      cohortInfo
+    };
+  }
+
+  // Generate PDF report
+  async function generatePDF() {
+    const clientInfo = getClientInfo();
+    if (!validateClientInfo(clientInfo)) return;
+    
+    const assessmentResults = (window as any).assessmentResults;
+    if (!assessmentResults) {
+      alert('Assessment data not found. Please retake the assessment.');
+      return;
+    }
+    
+    try {
+      // Show loading state on button
+      const pdfBtn = document.getElementById('generate-pdf-btn') as HTMLButtonElement;
+      const originalText = pdfBtn.innerHTML;
+      pdfBtn.disabled = true;
+      pdfBtn.innerHTML = `
+        <svg class="w-5 h-5 mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+        Generating PDF...
+      `;
+      
+      // Initialize PDF generator and create report
+      const pdfGenerator = new (window as any).AIReadinessPDFGenerator();
+      await pdfGenerator.generateReport(assessmentResults, clientInfo);
+      
+      // Reset button state
+      pdfBtn.disabled = false;
+      pdfBtn.innerHTML = originalText;
+      
+    } catch (error) {
+      console.error('PDF generation failed:', error);
+      alert('Failed to generate PDF. Please try again.');
+      
+      // Reset button state
+      const pdfBtn = document.getElementById('generate-pdf-btn') as HTMLButtonElement;
+      pdfBtn.disabled = false;
+      pdfBtn.innerHTML = `
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        Generate PDF Report
+      `;
+    }
+  }
+
+  // Email report
+  function emailReport() {
+    const clientInfo = getClientInfo();
+    if (!validateClientInfo(clientInfo)) return;
+    
+    const assessmentResults = (window as any).assessmentResults;
+    if (!assessmentResults) {
+      alert('Assessment data not found. Please retake the assessment.');
+      return;
+    }
+    
+    // Initialize PDF generator and open email client
+    const pdfGenerator = new (window as any).AIReadinessPDFGenerator();
+    pdfGenerator.openEmailClient(assessmentResults, clientInfo);
+  }
+
+  // Get client information from form
+  function getClientInfo() {
+    const clientNameEl = document.getElementById('client-name') as HTMLInputElement;
+    const clientContactEl = document.getElementById('client-contact') as HTMLInputElement;
+    const salespersonNameEl = document.getElementById('salesperson-name') as HTMLInputElement;
+    const assessmentDateEl = document.getElementById('assessment-date') as HTMLInputElement;
+    
+    return {
+      clientName: clientNameEl?.value || '',
+      clientContact: clientContactEl?.value || '',
+      salespersonName: salespersonNameEl?.value || '',
+      assessmentDate: assessmentDateEl?.value || ''
+    };
+  }
+
+  // Validate client information
+  function validateClientInfo(clientInfo: { clientName: string; clientContact: string; salespersonName: string; }) {
+    if (!clientInfo.clientName || !clientInfo.clientContact || !clientInfo.salespersonName) {
+      alert('Please fill in all required client information fields.');
+      return false;
+    }
+    return true;
+  }
+
+  // Handle browser back button to go to last survey question
+  window.addEventListener('popstate', (event) => {
+    // If back button is pressed, go to the last survey question
+    goBackToSurvey();
+  });
+
+  // Event listeners
+  document.addEventListener('DOMContentLoaded', initResults);
+  const generatePdfBtn = document.getElementById('generate-pdf-btn');
+  if (generatePdfBtn) generatePdfBtn.addEventListener('click', generatePDF);
+  const emailReportBtn = document.getElementById('email-report-btn');
+  if (emailReportBtn) emailReportBtn.addEventListener('click', emailReport);
+  const backToSurveyBtn = document.getElementById('back-to-survey-btn');
+  if (backToSurveyBtn) backToSurveyBtn.addEventListener('click', goBackToSurvey);
+</script>

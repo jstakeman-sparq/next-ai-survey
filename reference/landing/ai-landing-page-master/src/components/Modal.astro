@@ -1,0 +1,93 @@
+---
+import ContactForm from "./ContactForm.astro";
+---
+
+<!-- Modal Overlay -->
+<div id="contact-modal" class="fixed inset-0 z-50 hidden">
+  <!-- Backdrop -->
+  <div
+    class="fixed inset-0 bg-brand-dark bg-opacity-75 transition-opacity"
+    id="modal-backdrop"
+  >
+  </div>
+
+  <!-- Modal Container -->
+  <div class="fixed inset-0 flex items-center justify-center p-4 sm:p-6">
+    <div
+      class="bg-brand-light rounded-xl shadow-2xl max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto relative border border-gray-200"
+    >
+      <!-- Close Button -->
+      <button
+        id="close-modal"
+        class="absolute top-6 right-6 text-brand-dark hover:text-brand-orange text-3xl font-bold z-10 transition-colors duration-200"
+        aria-label="Close modal"
+      >
+        ×
+      </button>
+
+      <!-- Modal Header -->
+      <div class="px-8 pt-8 pb-6 border-b border-gray-200">
+        <h2
+          class="text-2xl md:text-3xl lg:text-4xl font-bold text-brand-dark mb-4"
+          style="line-height: 95%; font-weight: var(--font-weight-black);"
+        >
+          Let's Connect
+        </h2>
+        <p class="text-lg text-brand-dark opacity-80">
+          Ready to accelerate your product development? Let's discuss how Sparq
+          can help you ship smarter, not just faster.
+        </p>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="px-8 py-6">
+        <ContactForm />
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Basic modal styling only */
+  #contact-modal * {
+    box-sizing: border-box;
+  }
+</style>
+
+<script>
+  // Modal functionality
+  document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("contact-modal");
+    const openModalBtn = document.getElementById("open-contact-modal");
+    const closeModalBtn = document.getElementById("close-modal");
+    const backdrop = document.getElementById("modal-backdrop");
+
+    // Open modal
+    if (openModalBtn) {
+      openModalBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        modal?.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      });
+    }
+
+    // Close modal function
+    function closeModal() {
+      modal?.classList.add("hidden");
+      document.body.style.overflow = "auto";
+    }
+
+    // Close modal on close button click
+    closeModalBtn?.addEventListener("click", closeModal);
+
+    // Close modal on backdrop click
+    backdrop?.addEventListener("click", closeModal);
+
+    // Close modal on escape key
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !modal?.classList.contains("hidden")) {
+        closeModal();
+      }
+    });
+  });
+</script>

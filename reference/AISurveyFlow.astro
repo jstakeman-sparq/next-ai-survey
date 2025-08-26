@@ -1,0 +1,492 @@
+---
+// AI Readiness Survey Flow Component
+---
+
+<section class="min-h-screen bg-brand-light">
+  <!-- Header -->
+  <div class="bg-brand-dark text-white py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <a 
+          href="/ai-readiness-check" 
+          class="text-brand-cta hover:text-brand-cta-hover transition-colors"
+          title="Back to AI Readiness Check"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </a>
+        <h1 class="text-xl md:text-2xl font-semibold">AI Readiness Assessment</h1>
+      </div>
+      <div class="text-sm text-gray-300">
+        Question <span id="current-question">1</span> of 6
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 py-2">
+      <div class="w-full bg-gray-200 rounded-full h-2">
+        <div 
+          id="progress-bar" 
+          class="bg-brand-orange h-2 rounded-full transition-all duration-300 ease-out"
+          style="width: 16.67%"
+        ></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Survey Container -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-8 lg:px-16 py-12">
+    <!-- Question Card -->
+    <div id="question-card" class="bg-white rounded-2xl shadow-lg p-8 lg:p-12">
+      <!-- Question Content will be injected here -->
+    </div>
+
+    <!-- Navigation -->
+    <div class="flex justify-between items-center mt-8">
+      <button 
+        id="prev-btn"
+        class="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled
+      >
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Previous
+      </button>
+
+      <button 
+        id="next-btn"
+        class="inline-flex items-center px-6 py-3 bg-brand-orange text-white rounded-lg hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled
+      >
+        Next
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Survey data structure
+  const surveyData = {
+    questions: [
+      {
+        id: 1,
+        dimension: "AI Tooling & Current Usage",
+        question: "Thinking about the actual AI tools available to your employees today—like AI assistants or copilots—which of these statements best describes your company's environment?",
+        options: [
+          {
+            value: 'A',
+            text: 'Unofficial Use',
+            description: 'No official tools are provided; we assume some use of public AI websites.'
+          },
+          {
+            value: 'B', 
+            text: 'Informal Testing',
+            description: 'A few tools are being tested informally by a small, uncoordinated group of users.'
+          },
+          {
+            value: 'C',
+            text: 'Formal Piloting', 
+            description: 'We are running formal, approved pilots of specific AI tools for a defined business purpose.'
+          },
+          {
+            value: 'D',
+            text: 'Enterprise-Wide Rollout',
+            description: 'An integrated suite of enterprise-grade AI tools is widely available and embedded in our standard workflows.'
+          }
+        ]
+      },
+      {
+        id: 2,
+        dimension: "Use Cases & Business Value",
+        question: "When it comes to applying AI to solve specific business problems, which of these statements sounds most like your current approach?",
+        options: [
+          {
+            value: 'A',
+            text: 'No Defined Use Cases',
+            description: 'We have not identified any specific business problems and have not yet connected AI to business value.'
+          },
+          {
+            value: 'B',
+            text: 'Brainstorming Ideas',
+            description: 'We have brainstormed potential ideas but lack a formal business case or ROI for them.'
+          },
+          {
+            value: 'C',
+            text: 'Active Pilots with Business Goals',
+            description: 'We have active pilot projects underway with clearly defined and measurable business goals.'
+          },
+          {
+            value: 'D',
+            text: 'Portfolio of Deployed Solutions',
+            description: 'We manage a portfolio of deployed AI solutions and actively measure their business impact.'
+          }
+        ]
+      },
+      {
+        id: 3,
+        dimension: "Data Readiness",
+        question: "Regarding the data needed to power AI, which of these descriptions best fits your organization's data environment?",
+        options: [
+          {
+            value: 'A',
+            text: 'Siloed & Inaccessible',
+            description: 'Our data is siloed and difficult to access, which is a major roadblock for any AI initiative.'
+          },
+          {
+            value: 'B',
+            text: 'Foundational Work Underway',
+            description: 'We have foundational projects underway to improve data quality and access.'
+          },
+          {
+            value: 'C',
+            text: 'Prepared for Pilots',
+            description: 'We have prepared high-quality, accessible data specifically for our current pilot projects.'
+          },
+          {
+            value: 'D',
+            text: 'Mature & Centralized',
+            description: 'We have a mature, centralized data platform that provides governed, high-quality data for enterprise use.'
+          }
+        ]
+      },
+      {
+        id: 4,
+        dimension: "Technology & Infrastructure",
+        question: "How prepared is your company's underlying technology architecture to support and scale new AI applications?",
+        options: [
+          {
+            value: 'A',
+            text: 'Significant Limitations',
+            description: 'Significant technical debt or legacy systems would block any new AI deployment.'
+          },
+          {
+            value: 'B',
+            text: 'Planning for Upgrades',
+            description: 'We know our infrastructure needs to be upgraded for AI, but this is not yet resourced or scheduled.'
+          },
+          {
+            value: 'C',
+            text: 'Sufficient for Pilots',
+            description: 'Our current infrastructure supports our pilots, and we have a clear plan to scale if they are successful.'
+          },
+          {
+            value: 'D',
+            text: 'Modern & Scalable',
+            description: 'A modern, scalable cloud architecture is in place, ready to handle enterprise-grade AI workloads.'
+          }
+        ]
+      },
+      {
+        id: 5,
+        dimension: "People & Culture",
+        question: "Looking at your teams' skills and the company culture, which statement best reflects your readiness for AI-driven changes?",
+        options: [
+          {
+            value: 'A',
+            text: 'Skills Gaps & Resistance',
+            description: 'There are significant AI skill gaps, and the company culture is generally resistant to process changes.'
+          },
+          {
+            value: 'B',
+            text: 'Enthusiasts but No Formal Plan',
+            description: 'Pockets of enthusiasm for AI exist, but we have no formal training or change management plan.'
+          },
+          {
+            value: 'C',
+            text: 'Dedicated Teams & Leadership Buy-in',
+            description: 'We have a dedicated team for our pilots and leadership support for the change.'
+          },
+          {
+            value: 'D',
+            text: 'Established Teams & Embracing Culture',
+            description: 'We have established AI teams, a company-wide upskilling program, and a formal change management plan.'
+          }
+        ]
+      },
+      {
+        id: 6,
+        dimension: "Guidance & Controls for AI Use",
+        question: "Thinking about how your teams use or might use AI tools, what level of formal guidance or controls are they operating under?",
+        options: [
+          {
+            value: 'A',
+            text: 'No Specific Guidance',
+            description: 'Teams and individuals are using AI based on their own judgment, without any official company guidelines.'
+          },
+          {
+            value: 'B',
+            text: 'Basic "Do\'s and Don\'ts"',
+            description: 'General recommendations or informal guidance have been shared, but there are no formal, documented policies.'
+          },
+          {
+            value: 'C',
+            text: 'Project-Specific Guardrails',
+            description: 'Clear guidelines and controls have been established for specific, approved pilot projects or tools.'
+          },
+          {
+            value: 'D',
+            text: 'Clear Enterprise-Wide Policies',
+            description: 'There is a well-understood, enterprise-wide policy for responsible AI use that is actively communicated to all teams.'
+          }
+        ]
+      }
+    ]
+  };
+
+  // Survey state
+  let currentQuestionIndex = 0;
+  let answers = {};
+
+  // DOM elements
+  const questionCard = document.getElementById('question-card');
+  const currentQuestionSpan = document.getElementById('current-question');
+  const progressBar = document.getElementById('progress-bar');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+
+  // Browser history management
+  function pushStateToHistory() {
+    const state = {
+      currentQuestionIndex,
+      answers: { ...answers },
+      page: 'survey'
+    };
+    
+    const url = new URL(window.location);
+    url.searchParams.set('q', (currentQuestionIndex + 1).toString());
+    
+    history.pushState(state, '', url);
+  }
+
+  function restoreFromHistory(state) {
+    if (state && state.page === 'survey') {
+      currentQuestionIndex = state.currentQuestionIndex || 0;
+      answers = state.answers || {};
+      renderQuestion();
+      updateProgress();
+      updateNavigation();
+    }
+  }
+
+  // Initialize survey
+  function initSurvey() {
+    // Check if we're returning from results or have URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const questionParam = urlParams.get('q');
+    
+    // Try to restore from sessionStorage first (for results page back navigation)
+    const storedAnswers = sessionStorage.getItem('aiReadinessAnswers');
+    if (storedAnswers) {
+      answers = JSON.parse(storedAnswers);
+    }
+    
+    // Set question index from URL parameter if available
+    if (questionParam) {
+      const questionNumber = parseInt(questionParam, 10);
+      if (questionNumber >= 1 && questionNumber <= surveyData.questions.length) {
+        currentQuestionIndex = questionNumber - 1;
+      }
+    }
+    
+    // Initial render
+    renderQuestion();
+    updateProgress();
+    updateNavigation();
+    
+    // Push initial state to history
+    pushStateToHistory();
+  }
+
+  // Render current question
+  function renderQuestion() {
+    const question = surveyData.questions[currentQuestionIndex];
+    
+    questionCard.innerHTML = `
+      <div class="mb-8">
+        <div class="text-sm font-semibold text-brand-orange uppercase tracking-wider mb-3">
+          ${question.dimension}
+        </div>
+        <h2 class="text-2xl lg:text-3xl font-semibold text-brand-dark leading-tight">
+          ${question.question}
+        </h2>
+      </div>
+      
+      <div class="space-y-4">
+        ${question.options.map(option => `
+          <label class="block p-6 border-2 border-gray-200 rounded-xl hover:border-brand-orange hover:bg-orange-50 transition-all cursor-pointer option-card" data-value="${option.value}">
+            <div class="flex items-start space-x-4">
+              <input 
+                type="radio" 
+                name="question-${question.id}" 
+                value="${option.value}"
+                class="mt-1 h-5 w-5 text-brand-orange border-gray-300 focus:ring-brand-orange"
+                ${answers[question.id] === option.value ? 'checked' : ''}
+              >
+              <div class="flex-1">
+                <div class="font-semibold text-lg text-brand-dark mb-2">
+                  (${option.value}) ${option.text}
+                </div>
+                <div class="text-gray-600">
+                  ${option.description}
+                </div>
+              </div>
+            </div>
+          </label>
+        `).join('')}
+      </div>
+    `;
+
+    // Add event listeners for option selection
+    const options = questionCard.querySelectorAll('input[type="radio"]');
+    options.forEach(option => {
+      option.addEventListener('change', handleOptionChange);
+    });
+
+    // Add click handlers for option cards
+    const optionCards = questionCard.querySelectorAll('.option-card');
+    optionCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const radio = card.querySelector('input[type="radio"]') as HTMLInputElement;
+        if (radio) {
+          radio.checked = true;
+          handleOptionChange({ target: radio });
+        }
+      });
+    });
+  }
+
+  // Handle option selection
+  function handleOptionChange(event) {
+    const questionId = surveyData.questions[currentQuestionIndex].id;
+    answers[questionId] = event.target.value;
+    
+    // Save to sessionStorage for persistence
+    sessionStorage.setItem('aiReadinessAnswers', JSON.stringify(answers));
+    
+    // Update visual state
+    const optionCards = questionCard.querySelectorAll('.option-card');
+    optionCards.forEach(card => {
+      card.classList.remove('border-brand-orange', 'bg-orange-50');
+      card.classList.add('border-gray-200');
+    });
+    
+    const selectedCard = event.target.closest('.option-card');
+    selectedCard.classList.remove('border-gray-200');
+    selectedCard.classList.add('border-brand-orange', 'bg-orange-50');
+    
+    updateNavigation();
+    
+    // Update browser history with current answers
+    pushStateToHistory();
+  }
+
+  // Update progress bar
+  function updateProgress() {
+    const progress = ((currentQuestionIndex + 1) / surveyData.questions.length) * 100;
+    progressBar.style.width = `${progress}%`;
+    currentQuestionSpan.textContent = (currentQuestionIndex + 1).toString();
+  }
+
+  // Update navigation buttons
+  function updateNavigation() {
+    const prevButton = prevBtn as HTMLButtonElement;
+    const nextButton = nextBtn as HTMLButtonElement;
+    
+    prevButton.disabled = currentQuestionIndex === 0;
+    
+    const currentAnswer = answers[surveyData.questions[currentQuestionIndex].id];
+    const isLastQuestion = currentQuestionIndex === surveyData.questions.length - 1;
+    
+    if (isLastQuestion) {
+      nextButton.innerHTML = `
+        View Results
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      `;
+    } else {
+      nextButton.innerHTML = `
+        Next
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      `;
+    }
+    
+    nextButton.disabled = !currentAnswer;
+  }
+
+  // Navigate to previous question
+  function goToPrevious() {
+    if (currentQuestionIndex > 0) {
+      currentQuestionIndex--;
+      renderQuestion();
+      updateProgress();
+      updateNavigation();
+      pushStateToHistory();
+    }
+  }
+
+  // Navigate to next question or results
+  function goToNext() {
+    const currentAnswer = answers[surveyData.questions[currentQuestionIndex].id];
+    if (!currentAnswer) return;
+
+    if (currentQuestionIndex < surveyData.questions.length - 1) {
+      currentQuestionIndex++;
+      renderQuestion();
+      updateProgress();
+      updateNavigation();
+      pushStateToHistory();
+    } else {
+      // Go to results
+      goToResults();
+    }
+  }
+
+  // Navigate to results page
+  function goToResults() {
+    // Store answers in sessionStorage for results page
+    sessionStorage.setItem('aiReadinessAnswers', JSON.stringify(answers));
+    window.location.href = '/ai-readiness-results';
+  }
+
+  // Event listeners
+  prevBtn.addEventListener('click', goToPrevious);
+  nextBtn.addEventListener('click', goToNext);
+
+  // Handle browser back/forward navigation
+  window.addEventListener('popstate', (event) => {
+    if (event.state) {
+      restoreFromHistory(event.state);
+    } else {
+      // No state, go back to question 1
+      currentQuestionIndex = 0;
+      renderQuestion();
+      updateProgress();
+      updateNavigation();
+    }
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (event) => {
+    const prevButton = prevBtn as HTMLButtonElement;
+    const nextButton = nextBtn as HTMLButtonElement;
+    
+    if (event.key === 'ArrowLeft' && !prevButton.disabled) {
+      goToPrevious();
+    } else if (event.key === 'ArrowRight' && !nextButton.disabled) {
+      goToNext();
+    }
+  });
+
+  // Initialize the survey when the page loads
+  document.addEventListener('DOMContentLoaded', initSurvey);
+</script>

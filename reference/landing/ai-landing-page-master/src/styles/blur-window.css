@@ -1,0 +1,28 @@
+  
+.card-background,
+.card-window {
+  background-image: url('/images/helmet-img.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top left; /* << anchor everything here */
+}
+  
+  .card-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    filter: blur(8px);
+    z-index: 0;
+  }
+  
+  .card-window {
+    position: absolute;
+    width: 52%;
+    height: calc(100% - 32px);
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 1;
+    border: 1px solid #FFF;
+    right: 24px;
+    top: 16px;
+  }

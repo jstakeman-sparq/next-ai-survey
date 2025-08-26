@@ -1,0 +1,40 @@
+---
+import "../styles/global.css";
+import "../styles/blur-window.css";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <meta
+      name="description"
+      content="AI-Accelerated Product Execution for Fast Moving Teams. Sparq delivers business breakthroughs through AI-enabled product engineering."
+    />
+
+    <link href="https://fonts.cdnfonts.com/css/satoshi" rel="stylesheet" />
+
+    <title>Sparq - AI-Accelerated Product Execution</title>
+  </head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K4BLQNBE7D"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-K4BLQNBE7D");
+  </script>
+  <body class="font-body antialiased">
+    <slot />
+  </body>
+  <script
+    id="term-e7e5d07437489"
+    src="https://wec-assets.terminus.services/9121cecd-626b-4c14-a0b3-b70e217dee6d/t.js"
+  ></script>
+</html>

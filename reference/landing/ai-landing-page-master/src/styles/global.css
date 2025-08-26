@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Regular.woff2') format('woff2'),
+       url('/fonts/Satoshi-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Medium.woff2') format('woff2'),
+       url('/fonts/Satoshi-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Bold.woff2') format('woff2'),
+       url('/fonts/Satoshi-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Black.woff2') format('woff2'),
+       url('/fonts/Satoshi-Black.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+
+@theme {
+  --font-display: "Satoshi", "sans-serif";
+  --font-body: "Satoshi", "sans-serif";
+  
+  /* Brand Colors */
+  --color-primary: #E75437;
+  --color-primary-light: #F9DDD8;
+  --color-dark: #16110F;
+  --color-light: #F9F7F5;
+  --color-white: #ffffff;
+  
+  /* Custom color utilities */
+  --color-brand-orange: #E75437;
+  --color-brand-orange-light: #F9DDD8;
+  --color-brand-dark: #16110F;
+  --color-brand-light: #F9F7F5;
+  --color-brand-cta: #B8F0A1;
+  --color-brand-cta-hover: #A5E88E;
+  
+  /* Typography Scale */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+  --font-size-6xl: 3.75rem;
+  
+  /* Spacing */
+  --container-max-width: 1200px;
+}
+
+/* Custom utility classes */
+.bg-brand-orange { background-color: var(--color-brand-orange); }
+.bg-brand-orange-light { background-color: var(--color-brand-orange-light); }
+.bg-brand-dark { background-color: var(--color-brand-dark); }
+.bg-brand-light { background-color: var(--color-brand-light); }
+.bg-brand-cta { background-color: var(--color-brand-cta); }
+.bg-brand-cta-hover { background-color: var(--color-brand-cta-hover); }
+
+.text-brand-orange { color: var(--color-brand-orange); }
+.text-brand-orange-light { color: var(--color-brand-orange-light); }
+.text-brand-dark { color: var(--color-brand-dark); }
+.text-brand-light { color: var(--color-brand-light); }
+
+.border-brand-orange { border-color: var(--color-brand-orange); }
+
+/* Global styles */
+
+:root {
+  --font-weight-black: 900;
+}
+
+.font-weight {
+  font-weight: var(--font-weight-black);
+}

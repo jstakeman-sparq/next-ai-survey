@@ -1,0 +1,247 @@
+---
+// PDF Generator Component - Client-side PDF generation for AI Readiness Reports
+---
+
+<script>
+  // PDF generation functionality using jsPDF
+  // This script will be included in pages that need PDF generation
+
+  // Load jsPDF immediately when the page loads
+  let jsPDFLoadPromise: Promise<void> | null = null;
+
+  function loadjsPDF(): Promise<void> {
+    if (jsPDFLoadPromise) {
+      return jsPDFLoadPromise;
+    }
+
+    // If jsPDF is already loaded, resolve immediately
+    if (typeof (window as any).jspdf !== 'undefined' && (window as any).jspdf.jsPDF) {
+      jsPDFLoadPromise = Promise.resolve();
+      return jsPDFLoadPromise;
+    }
+
+    // Load jsPDF from CDN
+    jsPDFLoadPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      script.onload = () => {
+        console.log('jsPDF loaded successfully');
+        resolve();
+      };
+      script.onerror = () => {
+        console.error('Failed to load jsPDF');
+        reject(new Error('Failed to load jsPDF library'));
+      };
+      document.head.appendChild(script);
+    });
+
+    return jsPDFLoadPromise;
+  }
+
+  class AIReadinessPDFGenerator {
+    constructor() {
+      // jsPDF loading is handled globally now
+    }
+
+    async generateReport(assessmentData: any, clientInfo: any) {
+      try {
+        // Ensure jsPDF is loaded before proceeding
+        await loadjsPDF();
+        
+        if (typeof (window as any).jspdf === 'undefined' || !(window as any).jspdf.jsPDF) {
+          throw new Error('jsPDF failed to load');
+        }
+
+        const { jsPDF } = (window as any).jspdf;
+      const doc = new jsPDF();
+      
+      // Page margins and settings
+      const margin = 20;
+      const pageWidth = doc.internal.pageSize.width;
+      const pageHeight = doc.internal.pageSize.height;
+      const maxLineWidth = pageWidth - (margin * 2);
+      
+      let yPosition = margin;
+      
+      // Helper function to add text with line breaks
+      const addText = (text: string, fontSize = 12, isBold = false) => {
+        doc.setFontSize(fontSize);
+        doc.setFont(undefined, isBold ? 'bold' : 'normal');
+        
+        const lines = doc.splitTextToSize(text, maxLineWidth);
+        lines.forEach((line: string) => {
+          if (yPosition > pageHeight - margin) {
+            doc.addPage();
+            yPosition = margin;
+          }
+          doc.text(line, margin, yPosition);
+          yPosition += fontSize * 0.5;
+        });
+        yPosition += 5; // Extra spacing after text block
+      };
+
+      // Header
+      doc.setFillColor(231, 84, 55); // brand-orange
+      doc.rect(0, 0, pageWidth, 40, 'F');
+      
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(24);
+      doc.setFont(undefined, 'bold');
+      doc.text('Sparq', margin, 25);
+      
+      doc.setFontSize(16);
+      doc.text('AI Readiness Assessment Report', margin, 35);
+      
+      // Reset text color
+      doc.setTextColor(0, 0, 0);
+      yPosition = 60;
+
+      // Client Information
+      addText('CLIENT INFORMATION', 16, true);
+      addText(`Company: ${clientInfo.clientName}`);
+      addText(`Contact: ${clientInfo.clientContact}`);
+      addText(`Assessed by: ${clientInfo.salespersonName}`);
+      addText(`Date: ${new Date(clientInfo.assessmentDate).toLocaleDateString()}`);
+      yPosition += 10;
+
+      // Assessment Result
+      addText('ASSESSMENT RESULT', 16, true);
+      addText(`AI Cohort: ${assessmentData.cohort.name}`, 14, true);
+      addText(assessmentData.cohortInfo.description);
+      yPosition += 10;
+
+      // Response Distribution
+      addText('RESPONSE DISTRIBUTION', 16, true);
+      addText(`A Responses: ${assessmentData.cohort.distribution.A}`);
+      addText(`B Responses: ${assessmentData.cohort.distribution.B}`);
+      addText(`C Responses: ${assessmentData.cohort.distribution.C}`);
+      addText(`D Responses: ${assessmentData.cohort.distribution.D}`);
+      yPosition += 10;
+
+      // Detailed Responses
+      addText('DETAILED RESPONSES', 16, true);
+      const dimensions = [
+        'AI Tooling & Current Usage',
+        'Use Cases & Business Value', 
+        'Data Readiness',
+        'Technology & Infrastructure',
+        'People & Culture',
+        'Guidance & Controls for AI Use'
+      ];
+
+      dimensions.forEach((dimension, index) => {
+        const questionId = index + 1;
+        const answer = assessmentData.answers[questionId];
+        addText(`${dimension}: Answer ${answer}`, 12, true);
+      });
+      yPosition += 10;
+
+      // Recommended Next Steps
+      addText('RECOMMENDED NEXT STEPS', 16, true);
+      assessmentData.cohortInfo.nextSteps.forEach((step: string, index: number) => {
+        addText(`${index + 1}. ${step}`);
+      });
+      yPosition += 10;
+
+      // Conversation Starters
+      addText('CONVERSATION STARTERS', 16, true);
+      assessmentData.cohortInfo.conversationStarters.forEach((starter: string, index: number) => {
+        addText(`${index + 1}. ${starter}`);
+      });
+
+      // Footer
+      const footerY = pageHeight - 20;
+      doc.setFontSize(10);
+      doc.setTextColor(128, 128, 128);
+      doc.text('Generated by Sparq AI Readiness Assessment Tool', margin, footerY);
+      doc.text(new Date().toLocaleString(), pageWidth - margin - 50, footerY);
+
+      // Save the PDF
+      const fileName = `AI_Readiness_Report_${clientInfo.clientName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+      doc.save(fileName);
+      
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+        alert('Error generating PDF report. Please try again.');
+      }
+    }
+
+    generateEmailBody(assessmentData: any, clientInfo: any) {
+      const dimensions = [
+        'AI Tooling & Current Usage',
+        'Use Cases & Business Value', 
+        'Data Readiness',
+        'Technology & Infrastructure',
+        'People & Culture',
+        'Guidance & Controls for AI Use'
+      ];
+
+      const responseDetails = dimensions.map((dimension, index) => {
+        const questionId = index + 1;
+        const answer = assessmentData.answers[questionId];
+        return `${dimension}: Answer ${answer}`;
+      }).join('\n');
+
+      const nextSteps = assessmentData.cohortInfo.nextSteps.map((step: string, index: number) => 
+        `${index + 1}. ${step}`
+      ).join('\n');
+
+      const conversationStarters = assessmentData.cohortInfo.conversationStarters.map((starter: string, index: number) => 
+        `${index + 1}. ${starter}`
+      ).join('\n');
+
+      return `
+Subject: AI Readiness Assessment Results - ${clientInfo.clientName}
+
+Dear ${clientInfo.clientContact},
+
+Thank you for taking the time to complete the AI Readiness Assessment with ${clientInfo.salespersonName} on ${new Date(clientInfo.assessmentDate).toLocaleDateString()}.
+
+ASSESSMENT RESULT:
+AI Cohort: ${assessmentData.cohort.name}
+${assessmentData.cohortInfo.description}
+
+RESPONSE SUMMARY:
+${responseDetails}
+
+RECOMMENDED NEXT STEPS:
+${nextSteps}
+
+CONVERSATION STARTERS FOR OUR NEXT DISCUSSION:
+${conversationStarters}
+
+We look forward to continuing our conversation about how Sparq can support your AI journey.
+
+Best regards,
+${clientInfo.salespersonName}
+Sparq Team
+
+--
+This assessment was generated using Sparq's AI Readiness Assessment Tool.
+      `.trim();
+    }
+
+    openEmailClient(assessmentData: any, clientInfo: any) {
+      const emailBody = this.generateEmailBody(assessmentData, clientInfo);
+      const subject = `AI Readiness Assessment Results - ${clientInfo.clientName}`;
+      
+      const mailtoLink = `mailto:${clientInfo.clientContact}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+      
+      // Try to open the default email client in a new window
+      window.open(mailtoLink, '_blank');
+    }
+  }
+
+  // Load jsPDF immediately when the page loads
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('Loading jsPDF...');
+    loadjsPDF().then(() => {
+      console.log('jsPDF ready for use');
+    }).catch((error) => {
+      console.error('Failed to load jsPDF:', error);
+    });
+  });
+
+  // Make the PDF generator globally available
+  (window as any).AIReadinessPDFGenerator = AIReadinessPDFGenerator;
+</script>

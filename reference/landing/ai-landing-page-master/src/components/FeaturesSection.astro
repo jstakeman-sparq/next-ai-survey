@@ -1,0 +1,204 @@
+---
+// Features section component explaining AI-Accelerated approach
+---
+
+<section class="bg-[#F3F4F5] min-h-screen flex flex-col">
+  <!-- Header Section - Vertically Centered -->
+  <div class="mb-16 lg:mb-34 flex">
+    <div
+      class="max-w-28/32 mt-8 sm:mt-12 md:mt-16 lg:mt-32 xl:mt-44 2xl:mt-52 ml-8 sm:ml-24 md:ml-24 lg:ml-32 xl:ml-48 2xl:ml-56"
+    >
+      <div>
+        <p
+          class="text-sm md:text-md lg:text-lg xl:text-xl uppercase text-gray-600 mb-4 font-semibold"
+          style="line-height: 110%; letter-spacing: 6px;"
+        >
+          WHAT YOU'LL GET
+        </p>
+        <h2
+          class="text-3xl md:text-4xl lg:text-6xl xl:text-7xl text-brand-dark mb-6"
+          style="line-height: 95%; font-weight: var(--font-weight-black);"
+        >
+          What AI-Accelerated<br />Actually Means
+        </h2>
+        <p
+          class="text-md md:text-lg lg:text-xl xl:text-2xl max-w-24/32 md:max-w-16/32 text-gray-600"
+        >
+          AI-accelerated doesn't just mean offloading work to bots. It means
+          smarter signals, faster prototyping, and delivery systems that scale,
+          tailored for high-velocity engineering and ops teams.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Section - Image Card + Feature Cards -->
+  <div class="2xl:max-w-[2300px] pr-8 mr-auto pb-20">
+    <div class="flex flex-col 2xl:flex-row">
+      <!-- Image Card - Left Side -->
+      <div class="shrink-0 hidden 2xl:block">
+        <div
+          class="card-container max-w-100 min-[1920px]:max-w-160 h-125 min-[1600px]:aspect-[11/9] aspect-auto overflow-hidden rounded-lg relative"
+        >
+          <div class="card-background"></div>
+          <div class="card-window"></div>
+        </div>
+      </div>
+
+      <!-- Feature Cards - Right Side -->
+      <div class="flex-1 pl-6">
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-10"
+        >
+          <!-- Feature 1: Product Strategy -->
+          <div class="flex flex-col bg-white rounded-lg p-6 mt-2 min-w-55">
+            <div class="flex-none">
+              <div class="mb-4">
+                <img
+                  src="/images/chip.png"
+                  alt="Chip Icon"
+                  width="72"
+                  height="72"
+                />
+              </div>
+              <h3
+                class="text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-brand-dark mb-4"
+              >
+                Product strategy
+                <br />with AI built in
+              </h3>
+            </div>
+            <div class="flex-grow"></div>
+            <p
+              class="text-sm md:text-md lg:text-lg xl:text-xl text-gray-600 flex-none"
+            >
+              Clarify what's worth building using AI-assisted signal
+              distillation and domain modeling
+            </p>
+          </div>
+
+          <!-- Feature 2: Design & Validation -->
+          <div class="flex flex-col bg-white rounded-lg p-6 mt-2 min-w-55">
+            <div class="flex-none">
+              <div class="mb-4">
+                <img
+                  src="/images/chip.png"
+                  alt="Chip Icon"
+                  width="72"
+                  height="72"
+                />
+              </div>
+              <h3
+                class="text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-brand-dark mb-4"
+              >
+                Design & validation
+                <br />at speed
+              </h3>
+            </div>
+            <div class="flex-grow"></div>
+            <p
+              class="text-sm md:text-md lg:text-lg xl:text-xl text-gray-600 flex-none"
+            >
+              Accelerate feedback loops with AI prototyping and fast user
+              testing.
+            </p>
+          </div>
+
+          <!-- Feature 3: Engineering + AI -->
+          <div class="flex flex-col bg-white rounded-lg p-6 mt-2 min-w-55">
+            <div class="flex-none">
+              <div class="mb-4">
+                <img
+                  src="/images/chip.png"
+                  alt="Chip Icon"
+                  width="72"
+                  height="72"
+                />
+              </div>
+              <h3
+                class="text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-brand-dark mb-4"
+              >
+                Engineering + AI =
+                <br />velocity
+              </h3>
+            </div>
+            <div class="flex-grow"></div>
+            <p
+              class="text-sm md:text-md lg:text-lg xl:text-xl text-gray-600 flex-none"
+            >
+              Code smarter with embedded AI tools and reusable scaffolding
+            </p>
+          </div>
+
+          <!-- Feature 4: Continuous Optimization -->
+          <div
+            class="flex flex-col bg-white rounded-lg p-6 2xl:min-h-[480px] mt-2 min-w-55"
+          >
+            <div class="flex-none">
+              <div class="mb-4">
+                <img
+                  src="/images/chip.png"
+                  alt="Chip Icon"
+                  width="72"
+                  height="72"
+                />
+              </div>
+              <h3
+                class="text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-brand-dark mb-4"
+              >
+                Continuous
+                <br />optimization
+              </h3>
+            </div>
+            <div class="flex-grow"></div>
+            <p
+              class="text-sm md:text-md lg:text-lg xl:text-xl text-gray-600 flex-none"
+            >
+              Evolve products using behavioral signals and adaptive tuning
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function alignWindowBackground() {
+      const container = document.querySelector(".card-container");
+      const windowEl = document.querySelector(".card-window") as HTMLElement;
+
+      if (!container || !windowEl) return;
+
+      const IMAGE_WIDTH = 682;
+      const IMAGE_HEIGHT = 372;
+
+      const containerRect = container.getBoundingClientRect();
+      const windowRect = windowEl.getBoundingClientRect();
+
+      const containerWidth = containerRect.width;
+      const containerHeight = containerRect.height;
+
+      const imageAspect = IMAGE_WIDTH / IMAGE_HEIGHT;
+      const containerAspect = containerWidth / containerHeight;
+
+      let renderedWidth, renderedHeight;
+
+      if (containerAspect > imageAspect) {
+        // Fill width, crop top/bottom
+        renderedWidth = containerWidth;
+        renderedHeight = containerWidth / imageAspect;
+      } else {
+        // Fill height, crop sides
+        renderedHeight = containerHeight;
+        renderedWidth = containerHeight * imageAspect;
+      }
+
+      const distanceFromLeft = windowRect.left - containerRect.left;
+
+      windowEl.style.backgroundSize = `${renderedWidth}px ${renderedHeight}px`;
+      windowEl.style.backgroundPosition = `-${distanceFromLeft}px -16px`;
+    }
+
+    window.addEventListener("load", alignWindowBackground);
+    window.addEventListener("resize", alignWindowBackground);
+  </script>
+</section>

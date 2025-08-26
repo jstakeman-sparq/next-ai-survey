@@ -1,26 +1,115 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Satoshi Font Import */
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Tailwind v4 Theme Configuration */
+@theme {
+  --font-sans: 'Satoshi', sans-serif;
+  --font-display: 'Satoshi', sans-serif;
+  
+  /* Brand Colors */
+  --color-brand-orange: #E75437;
+  --color-brand-orange-light: #F9DDD8;
+  --color-brand-dark: #16110F;
+  --color-brand-light: #F9F7F5;
+  --color-brand-cta: #B8F0A1;
+  --color-brand-cta-hover: #A5E88E;
+  
+  /* Neutral Colors */
+  --color-neutral-light-100: #F9F7F5;
+  --color-neutral-light-200: #F2ECEA;
+  --color-neutral-light-300: #EBE5E2;
+  --color-neutral-light-400: #D9D1CE;
+  --color-neutral-light-500: #B8B0AD;
+  --color-neutral-dark-100: #71635C;
+  --color-neutral-dark-200: #51453F;
+  --color-neutral-dark-300: #392E27;
+  --color-neutral-dark-400: #231A17;
+  --color-neutral-dark-500: #16110F;
+  
+  /* Accent Colors */
+  --color-accent-100: #E3EED8;
+  --color-accent-200: #B8F0A1;
+  
+  /* Typography */
+  --font-size-hero: 4.25rem;
+  --font-size-display: 3.5rem;
+  --font-size-h1: 2.5rem;
+  --font-size-h2: 2rem;
+  --font-size-lead: 1.375rem;
+  
+  /* Font weights */
+  --font-weight-black: 900;
+}
+
+/* Global Styles */
+html {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-brand-light);
+  color: var(--color-brand-dark);
+}
+
+/* Custom Container Utility Class */
+.container-custom {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-custom {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-custom {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container-custom {
+    padding-left: 165px;
+    padding-right: 165px;
+  }
 }

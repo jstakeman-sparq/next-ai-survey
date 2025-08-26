@@ -1,0 +1,103 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import CaseStudyHero from "../components/CaseStudyHero.astro";
+import CaseStudyContent from "../components/CaseStudyContent.astro";
+import CaseStudyAuthor from "../components/CaseStudyAuthor.astro";
+import CaseStudyRelated from "../components/CaseStudyRelated.astro";
+import Footer from "../components/Footer.astro";
+
+export interface Props {
+  // Hero data
+  title: string;
+  subtitle: string;
+  author: {
+    name: string;
+    avatar: string;
+    bio: string;
+  };
+  publishDate: string;
+  readTime: string;
+  tags: string[];
+  
+  // Stats
+  keyHighlights: Array<{
+    value: string;
+    description: string;
+  }>;
+  
+  // Content sections
+  overview: string;
+  industry: string[];
+  challenge: string;
+  approach: string;
+  solution: string;
+  results: string;
+  quote?: {
+    text: string;
+    attribution: string;
+  };
+  
+  // Technical
+  technologies: string[];
+  services: string[];
+  
+  // Related content
+  relatedArticles: Array<{
+    title: string;
+    date: string;
+    readTime: string;
+    tag: string;
+    slug: string;
+  }>;
+}
+
+const {
+  title,
+  subtitle,
+  author,
+  publishDate,
+  readTime,
+  tags,
+  keyHighlights,
+  overview,
+  industry,
+  challenge,
+  approach,
+  solution,
+  results,
+  quote,
+  technologies,
+  services,
+  relatedArticles
+} = Astro.props;
+---
+
+<BaseLayout>
+  <CaseStudyHero 
+    title={title}
+    subtitle={subtitle}
+    author={author}
+    publishDate={publishDate}
+    readTime={readTime}
+    tags={tags}
+  />
+  
+  <CaseStudyContent 
+    keyHighlights={keyHighlights}
+    overview={overview}
+    industry={industry}
+    challenge={challenge}
+    approach={approach}
+    solution={solution}
+    results={results}
+    quote={quote}
+    technologies={technologies}
+    services={services}
+  />
+  
+  <!-- <CaseStudyAuthor author={author} /> -->
+  
+  <!-- <CaseStudyRelated relatedArticles={relatedArticles} /> -->
+  
+  <Footer />
+</BaseLayout>

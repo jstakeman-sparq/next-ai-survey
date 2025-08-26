@@ -1,0 +1,165 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+export const prerender = true;
+---
+
+<BaseLayout>
+  <Header />
+  <section class="container max-w-25/32 mx-auto px-4 md:px-8 lg:px-12 xl:px-16">
+    <h2
+      class="text-2xl md:text-3xl lg:text-5xl xl:text-7xl font-black mb-18 font-display"
+    >
+      Privacy Policy
+    </h2>
+    <hr class="w-full border-b-2 border-gray-800 mb-12" />
+    <div class="prose prose-lg text-gray-800 leading-relaxed">
+      <div class="mb-8">
+        <h3 class="text-xl font-bold mb-4 text-gray-900">
+          What information do we collect?
+        </h3>
+        <p class="mb-6">
+          We collect basic contact information from you when you fill out a form
+          on our site such as your name, e-mail address, phone number or company
+          name.
+        </p>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-bold mb-4 text-gray-900">
+          What do we use your information for?
+        </h3>
+        <p class="mb-4">
+          The information we collect from you may be used in one of the
+          following ways:
+        </p>
+        <ul class="list-disc pl-6 space-y-3 mb-6">
+          <li>
+            <strong>To personalize your experience</strong><br />Your
+            information helps us to better respond to your individual needs.
+          </li>
+          <li>
+            <strong>To improve our website</strong><br />We continually strive
+            to improve our website offerings based on the information and
+            feedback we receive from you.
+          </li>
+          <li>
+            <strong>To improve customer service</strong><br />Your information
+            helps us to more effectively respond to your customer service
+            requests and support needs.
+          </li>
+          <li>
+            <strong>To process transactions</strong><br />Your information,
+            whether public or private, will not be sold, exchanged, transferred,
+            or given to any other company for any reason whatsoever.
+          </li>
+          <li>
+            <strong
+              >To administer a contest, promotion, survey or other site feature</strong
+            >
+          </li>
+          <li>
+            <strong>To send periodic emails</strong><br />The email address you
+            provide may be used to send you occasional company news, updates,
+            related product or service information, etc.
+          </li>
+        </ul>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-bold mb-4 text-gray-900">
+          How do we protect your information?
+        </h3>
+        <p class="mb-6">
+          At Sparq, we maintain strict data security systems that ensure
+          specific information will not be made available to any unauthorized
+          person and in order to protect information from loss, misuse and
+          unauthorized access, disclosure, alteration or destruction. Any
+          information collected by us is stored on our web server or database
+          but is not publicly accessible from our website or otherwise. We use a
+          multi-level, password protected security system to control access to
+          information stored about users. We also maintain strict physical
+          security of our properties and facilities and only provide access to
+          authorized personnel.
+        </p>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-bold mb-4 text-gray-900">Do we use cookies?</h3>
+        <p class="mb-6">
+          Yes. Cookies are small files that our website or our service provider
+          transfers to your computer's hard drive through your web browser (if
+          you allow) that enables our website or service providers systems to
+          recognize your browser and capture and remember certain information.
+          We use cookies to understand and save your preferences for future
+          visits, keep track of advertisements and compile aggregate data about
+          our site traffic and site interaction so that we can offer better site
+          experiences and tools in the future.
+        </p>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-bold mb-4 text-gray-900">
+          Do we disclose any information to outside parties?
+        </h3>
+        <p class="mb-6">
+          We do not sell, trade, or otherwise transfer to outside parties your
+          personally identifiable information.
+        </p>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-bold mb-4 text-gray-900">Third party links</h3>
+        <p class="mb-6">
+          Occasionally, at our discretion, we may include or offer third party
+          products or services on our website. These third party sites have
+          separate and independent privacy policies. We therefore, have no
+          responsibility or liability for the content and activities of these
+          linked sites. Nonetheless, we seek to protect the integrity of our
+          site and welcome any feedback about these sites.
+        </p>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-bold mb-4 text-gray-900">
+          Online Privacy Policy
+        </h3>
+        <p class="mb-6">
+          This online privacy policy applies only to information collected
+          through our website and not to information collected offline.
+        </p>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-bold mb-4 text-gray-900">Your Consent</h3>
+        <p class="mb-6">
+          By using our site, you consent to our privacy policy.
+        </p>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-bold mb-4 text-gray-900">
+          Updates to Our Privacy Policy
+        </h3>
+        <p class="mb-6">
+          If we decide to change our privacy policy, we will post those changes
+          on this page.
+        </p>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-bold mb-4 text-gray-900">Contacting Us</h3>
+        <p class="mb-6">
+          If you have any questions regarding our privacy policy, please send an
+          email to <a
+            href="mailto:inquiries@teamsparq.com"
+            class="text-blue-600 hover:text-blue-800 underline"
+            >inquiries@teamsparq.com</a
+          >.
+        </p>
+      </div>
+    </div>
+  </section>
+  <Footer />
+</BaseLayout>

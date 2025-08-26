@@ -1,0 +1,186 @@
+---
+// Hero component for Sparq landing page
+---
+
+<section
+  class="relative text-white min-h-screen flex flex-col"
+  style="background-image: url('/images/hero1.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;"
+>
+  <!-- Dark overlay for better text readability -->
+  <div class="absolute inset-0"></div>
+
+  <!-- Sparq Logo/Brand in upper left -->
+  <div class="relative z-10 px-4 sm:px-8 lg:px-16 xl:px-[165px] py-8">
+    <h1
+      class="font-display text-xl md:text-2xl lg:text-3xl xl:text-4xl"
+      style="color: #F3F4F5; font-family: Satoshi; font-style: normal; font-weight: 900; line-height: 90%; letter-spacing: -1.297px;"
+    >
+      Sparq
+    </h1>
+  </div>
+
+  <!-- Gradient blurred background screen positioned behind h2 text -->
+  <div
+    class="absolute left-0 right-0 z-5"
+    style="bottom: 12rem; height: 14rem;"
+  >
+    <!-- Blur layer 1 - lightest blur at top -->
+    <div
+      class="absolute inset-0"
+      style="background: rgba(35, 20, 5, 0.15);   backdrop-filter: blur(0.5px);
+          mask: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 1) 12.5%,
+            rgba(0, 0, 0, 1) 25%,
+            rgba(0, 0, 0, 0) 37.5%
+          );"
+    >
+    </div>
+    <!-- Blur layer 2 - medium blur -->
+    <div
+      class="absolute inset-0"
+      style="background: rgba(35, 20, 5, 0.25); backdrop-filter: blur(4px);
+        mask: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 12.5%,
+          rgba(0, 0, 0, 1) 25%,
+          rgba(0, 0, 0, 1) 37.5%,
+          rgba(0, 0, 0, 0) 50%
+        );"
+    >
+    </div>
+    <!-- Blur layer 3 - stronger blur -->
+    <div
+      class="absolute inset-0"
+      style="background: rgba(35, 20, 5, 0.35); backdrop-filter: blur(8px);
+        mask: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 25%,
+          rgba(0, 0, 0, 1) 37.5%,
+          rgba(0, 0, 0, 1) 50%,
+          rgba(0, 0, 0, 0) 62.5%
+        );"
+    >
+    </div>
+    <!-- Blur layer 4 - strongest blur at bottom -->
+    <div
+      class="absolute inset-0"
+      style="background: rgba(35, 20, 5, 0.45); backdrop-filter: blur(16px);
+        mask: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 37.5%,
+          rgba(0, 0, 0, 1) 50%,
+          rgba(0, 0, 0, 1) 62.5%,
+          rgba(0, 0, 0, 0) 75%
+        );"
+    >
+    </div>
+    <div
+      class="absolute inset-0"
+      style="background: rgba(35, 20, 5, 0.45); backdrop-filter: blur(32px);
+        mask: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 50%,
+          rgba(0, 0, 0, 1) 62.5%,
+          rgba(0, 0, 0, 1) 75%,
+          rgba(0, 0, 0, 0) 87.5%
+        );"
+    >
+    </div>
+    <div
+      class="absolute inset-0"
+      style="background: rgba(35, 20, 5, 0.45); backdrop-filter: blur(64px);
+        mask: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 62.5%,
+          rgba(0, 0, 0, 1) 75%,
+          rgba(0, 0, 0, 1) 87.5%,
+          rgba(0, 0, 0, 0) 100%
+        );"
+    >
+    </div>
+    <div
+      class="absolute inset-0"
+      style="background: rgba(35, 20, 5, 0.45); backdrop-filter: blur(32px);
+        mask: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 75%,
+          rgba(0, 0, 0, 1) 87.5%,
+          rgba(0, 0, 0, 1) 100%
+        );"
+    >
+    </div>
+  </div>
+
+  <!-- Solid background layer above divider line -->
+  <div
+    class="absolute bottom-0 left-0 right-0 h-54"
+    style="background: #231405;"
+  >
+  </div>
+
+  <!-- Main content anchored to bottom -->
+  <div class="relative z-10 flex-1 flex items-end">
+    <div class="px-4 sm:px-8 lg:px-16 xl:px-[165px] pb-20 z-11 w-full">
+      <div class="w-full">
+        <div class="text-left">
+          <!-- Main Headline -->
+          <h2
+            class="text-2xl md:text-3xl lg:text-5xl xl:text-7xl font-black mb-18 font-display"
+            style="line-height: 100%;"
+          >
+            Move Fast. Ship Even Faster. AI-accelerated product execution for
+            when speed isn’t optional.
+          </h2>
+
+          <!-- Divider line -->
+          <div class="w-full mb-8">
+            <svg
+              width="100%"
+              height="1"
+              viewBox="0 0 100 1"
+              preserveAspectRatio="none"
+            >
+              <line
+                x1="0"
+                y1="0.5"
+                x2="100"
+                y2="0.5"
+                style="stroke-width: 0.875px; stroke: rgba(255, 255, 255, 0.50);"
+              ></line>
+            </svg>
+          </div>
+
+          <!-- Bottom section with AI multiplier and description -->
+          <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 xl:gap-16 items-baseline">
+            <!-- Left: AI as a multiplier (2/3 width) -->
+            <div class="xl:col-span-2">
+              <p
+                class="text-sm uppercase text-gray-600"
+                style="line-height: 110%; letter-spacing: 6px;"
+              >
+              </p>
+              <a
+                href="/case-studies/using-ai-to-solve-a-stadiums-biggest-entry-headache/"
+                class="bg-brand-cta hover:bg-brand-cta-hover text-black font-semibold px-6 py-3 rounded-lg text-md md:text-lg lg:text-xl xl:text-2xl transition-all duration-200 inline-block"
+              >
+                Explore an AI Success Story
+              </a>
+            </div>
+
+            <!-- Right: Description (1/3 width) -->
+            <div class="xl:col-span-1 hidden lg:block">
+              <p
+                class="text-md md:text-lg lg:text-xl xl:text-2xl text-gray-200"
+                style="letter-spacing: 0.05em;"
+              >
+                SOLUTIONS WITH IMPACT
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
