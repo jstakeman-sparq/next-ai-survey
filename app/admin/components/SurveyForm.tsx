@@ -47,9 +47,11 @@ export default function SurveyForm({ onSurveyCreated }: SurveyFormProps) {
       
       // Configure Amplify
       Amplify.configure(outputs.default)
-      const client = generateClient()
+      const client = generateClient({
+        authMode: 'apiKey',
+      })
 
-      const { errors } = await client.models.Survey.create({
+      const { errors } = await (client.models as any).Survey.create({
         title: '2025 AI Readiness Survey',
         type: '2025AIReadinessSurvey',
         shortCode: formData.shortCode,

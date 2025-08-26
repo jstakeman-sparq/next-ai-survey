@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { auth } from "@/auth"
 
 export function useSession() {
-  const [session, setSession] = useState(null)
+  const [session, setSession] = useState<any>(null)
 
   useEffect(() => {
     // In development mode, return a mock session if needed
