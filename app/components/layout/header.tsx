@@ -6,13 +6,12 @@ export function Header() {
     <header className="absolute top-0 left-0 right-0 z-50">
       <div className="container-custom py-8">
         <div className="flex items-center justify-between">
-          <Title 
-            variant="h2"
-            as="h1"
-            className="text-white font-black text-xl md:text-2xl lg:text-3xl xl:text-4xl"
+          <Link 
+            href="/" 
+            className="text-white font-black text-xl md:text-2xl lg:text-3xl xl:text-4xl leading-none tracking-tight hover:opacity-80 transition-opacity"
           >
-            <Link href="/">Sparq</Link>
-          </Title>
+            Sparq
+          </Link>
           
           <nav className="hidden md:flex items-center gap-8">
             <Link 

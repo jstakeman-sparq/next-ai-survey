@@ -77,21 +77,9 @@ export function Hero() {
         style={{ background: '#231405' }}
       />
 
-      {/* Sparq Logo/Brand in upper left */}
+      {/* Header space - logo is handled by the header component */}
       <div className="relative z-10 px-4 sm:px-8 lg:px-16 xl:px-[165px] py-8">
-        <h1
-          className="font-display text-xl md:text-2xl lg:text-3xl xl:text-4xl"
-          style={{
-            color: '#F3F4F5',
-            fontFamily: 'Satoshi',
-            fontStyle: 'normal',
-            fontWeight: 900,
-            lineHeight: '90%',
-            letterSpacing: '-1.297px'
-          }}
-        >
-          Sparq
-        </h1>
+        {/* Space for header - no duplicate logo needed */}
       </div>
 
       {/* Main Content */}
