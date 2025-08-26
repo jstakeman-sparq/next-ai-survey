@@ -104,7 +104,7 @@ export function Hero() {
                 <Button 
                   variant="primary"
                   size="xl"
-                  href="/case-studies/ai-success-story"
+                  href="/case-studies/using-ai-to-solve-a-stadiums-biggest-entry-headache"
                   className="font-semibold"
                 >
                   Explore an AI Success Story

@@ -1,10 +1,35 @@
+"use client"
+
 import { Title } from "../ui/title"
 import Link from "next/link"
 
-export function Footer() {
+interface FooterProps {
+  onOpenContactModal?: () => void
+}
+
+export function Footer({ onOpenContactModal }: FooterProps) {
   return (
     <footer className="bg-brand-dark text-white py-16">
       <div className="max-w-6xl mx-auto px-4">
+        {/* CTA Section */}
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 mb-16 pb-12 border-b border-white/20">
+          <div className="flex-1">
+            <Title variant="h1" className="text-white mb-4">
+              Let's Build What Matters. Connect with a Sparq Expert Today
+            </Title>
+            <p className="text-white/80 text-lg leading-relaxed max-w-2xl">
+              Whether you're scaling platforms or rethinking operations, we'll help
+              you ship smarter, not just faster.
+            </p>
+          </div>
+          <button
+            onClick={onOpenContactModal}
+            className="bg-brand-orange hover:bg-brand-orange/90 text-white px-8 py-4 rounded-lg text-md md:text-lg lg:text-xl xl:text-2xl transition-all duration-200 cursor-pointer lg:flex-shrink-0"
+          >
+            Grab some time
+          </button>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Brand */}
           <div>
@@ -31,7 +56,14 @@ export function Footer() {
             <h3 className="text-lg font-semibold mb-4">Get in Touch</h3>
             <ul className="space-y-2 text-white/80">
               <li><a href="mailto:hello@teamsparq.com" className="hover:text-white transition-colors">hello@teamsparq.com</a></li>
-              <li><Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
+              <li>
+                <button
+                  onClick={onOpenContactModal}
+                  className="text-white/80 hover:text-white transition-colors text-left"
+                >
+                  Contact Us
+                </button>
+              </li>
             </ul>
           </div>
         </div>

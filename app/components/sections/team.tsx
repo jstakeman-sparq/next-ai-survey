@@ -10,25 +10,18 @@ export function Team() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Left Content */}
           <div>
-            <Eyebrow className="text-white/80 mb-8">
-              METHODOLOGY & DELIVERY
-            </Eyebrow>
-            
             <Title 
               variant="display"
               className="text-white mb-8"
             >
-              Our product engineering system is built to ship, not just prototype.
+              Humans + AI, Better Together
             </Title>
 
             <div className="space-y-6 mb-8">
               <p className="text-lg md:text-xl text-white/90">
-                We combine proven methodologies with cutting-edge AI tools to deliver
-                production-ready solutions that scale.
-              </p>
-              <p className="text-lg md:text-xl text-white/90">
-                Every project follows our systematic approach: strategy, design,
-                engineering, and intelligence working in harmony.
+                Our team is made up of builders who use AI as a force multiplier. This means 
+                smarter signals, faster prototyping, and delivery systems that scale, tailored 
+                for high-velocity engineering and ops teams.
               </p>
             </div>
 
