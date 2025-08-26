@@ -12,6 +12,33 @@ const schema = a.schema({
       content: a.string(),
     })
     .authorization((allow) => [allow.publicApiKey()]),
+  
+  Survey: a
+    .model({
+      title: a.string().required(),
+      description: a.string(),
+      shortCode: a.string().required(),
+      status: a.enum(['active', 'inactive']),
+      createdBy: a.string().required(),
+      responses: a.hasMany('SurveyResponse', 'surveyId'),
+    })
+    .authorization((allow) => [
+      allow.publicApiKey().to(['read']),
+      allow.authenticated().to(['create', 'update', 'delete'])
+    ]),
+    
+  SurveyResponse: a
+    .model({
+      surveyId: a.id().required(),
+      responses: a.json().required(),
+      submittedAt: a.datetime(),
+      ipAddress: a.string(),
+      survey: a.belongsTo('Survey', 'surveyId'),
+    })
+    .authorization((allow) => [
+      allow.publicApiKey().to(['create', 'read']),
+      allow.authenticated().to(['read', 'update', 'delete'])
+    ]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
