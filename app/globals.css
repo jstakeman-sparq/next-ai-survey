@@ -93,6 +93,23 @@ body {
   padding-right: 1rem;
 }
 
+/* Prose styling for case study content */
+.prose p {
+  margin-bottom: 1rem;
+}
+
+.prose p:last-child {
+  margin-bottom: 0;
+}
+
+/* Line clamp utility for card previews */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 @media (min-width: 640px) {
   .container-custom {
     padding-left: 2rem;
