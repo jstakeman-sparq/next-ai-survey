@@ -48,6 +48,7 @@ const jumpCloudConfig = {
   id: "jumpcloud",
   name: "JumpCloud",
   type: "oidc" as const,
+  wellKnown: "https://oauth.id.jumpcloud.com/.well-known/openid-configuration",
   issuer: String(requiredEnvVars.AUTH_JUMPCLOUD_ISSUER || ''),
   clientId: String(requiredEnvVars.AUTH_JUMPCLOUD_ID || ''),
   clientSecret: String(requiredEnvVars.AUTH_JUMPCLOUD_SECRET || ''),
