@@ -15,6 +15,7 @@ export default auth((req) => {
   // Redirect unauthenticated users to login
   if (!req.auth && req.nextUrl.pathname.startsWith("/admin")) {
     const newUrl = new URL("/admin/login", req.nextUrl.origin)
+    newUrl.searchParams.set("callbackUrl", req.nextUrl.href)
     return Response.redirect(newUrl)
   }
 })

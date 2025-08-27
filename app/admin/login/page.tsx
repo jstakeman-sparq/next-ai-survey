@@ -49,7 +49,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           <form
             action={async () => {
               "use server"
-              await signIn("jumpcloud", { redirectTo: "/admin" })
+              await signIn("jumpcloud", { redirectTo: callbackUrl || "/admin" })
             }}
           >
             <button
