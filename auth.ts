@@ -9,6 +9,7 @@ try {
     AUTH_JUMPCLOUD_ISSUER: secret('AUTH_JUMPCLOUD_ISSUER'),
     AUTH_JUMPCLOUD_ID: secret('AUTH_JUMPCLOUD_ID'),
     AUTH_JUMPCLOUD_SECRET: secret('AUTH_JUMPCLOUD_SECRET'),
+    AUTH_URL: secret('AUTH_URL'),
   };
 } catch (error) {
   // Amplify backend not available (likely edge runtime or build time)
@@ -21,15 +22,16 @@ const requiredEnvVars = {
   AUTH_JUMPCLOUD_ISSUER: amplifySecrets?.AUTH_JUMPCLOUD_ISSUER || process.env.AUTH_JUMPCLOUD_ISSUER,
   AUTH_JUMPCLOUD_ID: amplifySecrets?.AUTH_JUMPCLOUD_ID || process.env.AUTH_JUMPCLOUD_ID,
   AUTH_JUMPCLOUD_SECRET: amplifySecrets?.AUTH_JUMPCLOUD_SECRET || process.env.AUTH_JUMPCLOUD_SECRET,
+  AUTH_URL: amplifySecrets?.AUTH_URL || process.env.AUTH_URL || process.env.NEXTAUTH_URL,
 }
 
 // Log NextAuth URL configuration
-const nextAuthUrl = process.env.AUTH_URL || process.env.NEXTAUTH_URL
 console.log('NextAuth Configuration:')
-console.log('- AUTH_URL:', process.env.AUTH_URL)
-console.log('- NEXTAUTH_URL:', process.env.NEXTAUTH_URL)
-console.log('- Resolved URL:', nextAuthUrl)
+console.log('- AUTH_URL (env):', process.env.AUTH_URL)
+console.log('- NEXTAUTH_URL (env):', process.env.NEXTAUTH_URL)
+console.log('- AUTH_URL (resolved):', requiredEnvVars.AUTH_URL)
 console.log('- NODE_ENV:', process.env.NODE_ENV)
+console.log('- Amplify secrets available:', !!amplifySecrets)
 
 // Check for missing environment variables
 const missingEnvVars = Object.entries(requiredEnvVars)
@@ -89,6 +91,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     authorized: async ({ auth }) => {
       // Return true if user is authenticated
       return !!auth
+    },
+    redirect: async ({ url, baseUrl }) => {
+      // Ensure redirects use the correct base URL in production
+      const authUrl = requiredEnvVars.AUTH_URL;
+      const resolvedBaseUrl = authUrl || baseUrl;
+      
+      // If url is relative, resolve it against the base URL
+      if (url.startsWith('/')) {
+        return `${resolvedBaseUrl}${url}`;
+      }
+      
+      // If url is absolute and matches the base domain, allow it
+      if (url.startsWith(resolvedBaseUrl)) {
+        return url;
+      }
+      
+      // Default to base URL for safety
+      return resolvedBaseUrl;
     },
   },
   pages: {
