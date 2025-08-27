@@ -23,14 +23,29 @@ Set these as **secrets** (not environment variables) in your Amplify app:
 
 ### How to Set Secrets in Amplify Console
 
+**Important**: Environment variables in Amplify Gen2 must be set as **secrets**, not plain text variables.
+
 1. Go to your Amplify app in AWS Console
 2. Navigate to **Environment variables** in the left sidebar  
 3. Click **Manage variables**
 4. For each variable, click **Add variable**:
-   - Set **Type** to **Secret** (not Plain text)
    - Enter the variable name (e.g., `AUTH_SECRET`)
+   - Set **Type** to **Secret** (not Plain text) 
    - Enter the value
    - Click **Save**
+
+**Alternative Method via AWS CLI:**
+```bash
+aws amplify put-app-settings \
+  --app-id YOUR_APP_ID \
+  --environment-variables AUTH_SECRET=your-secret-value
+```
+
+**Verification**: After setting secrets, check the deployment logs for:
+```
+Environment check:
+AUTH_SECRET present: true
+```
 
 ### Environment Variables (Optional)
 
@@ -57,8 +72,15 @@ The `amplify.yml` file handles deployment automatically. The build process:
 
 ## Troubleshooting
 
-### Build Fails with Missing Environment Variables
-- **Solution**: Set variables as **secrets** in Amplify console, not environment variables
+### Build Fails with "MissingSecret" Error
+- **Error**: `[auth][error] MissingSecret: Please define a 'secret'`
+- **Solution**: Set `AUTH_SECRET` as a **secret** in Amplify console
+- **Note**: Must use "Secret" type, not "Plain text"
+
+### Environment Variables Not Loading
+- **Issue**: Logs show `AUTH_SECRET present: false`
+- **Solution**: Double-check that variables are set as **secrets**
+- **Verify**: Variables show as masked (•••••) in Amplify console
 
 ### 500 Error on Login After Deployment  
 - **Solution**: Verify all 4 secrets are set correctly in Amplify console
