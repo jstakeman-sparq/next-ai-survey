@@ -1,11 +1,26 @@
 import NextAuth from "next-auth"
 
-// Edge-compatible auth configuration (no Amplify backend imports)
+// Try to import Amplify secrets, fallback to env vars
+let amplifySecrets: any = null;
+try {
+  const { secret } = require('@aws-amplify/backend');
+  amplifySecrets = {
+    AUTH_SECRET: secret('AUTH_SECRET'),
+    AUTH_JUMPCLOUD_ISSUER: secret('AUTH_JUMPCLOUD_ISSUER'),
+    AUTH_JUMPCLOUD_ID: secret('AUTH_JUMPCLOUD_ID'),
+    AUTH_JUMPCLOUD_SECRET: secret('AUTH_JUMPCLOUD_SECRET'),
+  };
+} catch (error) {
+  // Amplify backend not available (likely edge runtime or build time)
+  console.log('Amplify backend not available, using environment variables');
+}
+
+// Load secrets from Amplify if available, otherwise use environment variables
 const requiredEnvVars = {
-  AUTH_SECRET: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
-  AUTH_JUMPCLOUD_ISSUER: process.env.AUTH_JUMPCLOUD_ISSUER,
-  AUTH_JUMPCLOUD_ID: process.env.AUTH_JUMPCLOUD_ID,
-  AUTH_JUMPCLOUD_SECRET: process.env.AUTH_JUMPCLOUD_SECRET,
+  AUTH_SECRET: amplifySecrets?.AUTH_SECRET || process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
+  AUTH_JUMPCLOUD_ISSUER: amplifySecrets?.AUTH_JUMPCLOUD_ISSUER || process.env.AUTH_JUMPCLOUD_ISSUER,
+  AUTH_JUMPCLOUD_ID: amplifySecrets?.AUTH_JUMPCLOUD_ID || process.env.AUTH_JUMPCLOUD_ID,
+  AUTH_JUMPCLOUD_SECRET: amplifySecrets?.AUTH_JUMPCLOUD_SECRET || process.env.AUTH_JUMPCLOUD_SECRET,
 }
 
 // Log NextAuth URL configuration
