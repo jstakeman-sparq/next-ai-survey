@@ -8,6 +8,14 @@ const requiredEnvVars = {
   AUTH_JUMPCLOUD_SECRET: process.env.AUTH_JUMPCLOUD_SECRET,
 }
 
+// Log NextAuth URL configuration
+const nextAuthUrl = process.env.AUTH_URL || process.env.NEXTAUTH_URL
+console.log('NextAuth Configuration:')
+console.log('- AUTH_URL:', process.env.AUTH_URL)
+console.log('- NEXTAUTH_URL:', process.env.NEXTAUTH_URL)
+console.log('- Resolved URL:', nextAuthUrl)
+console.log('- NODE_ENV:', process.env.NODE_ENV)
+
 // Check for missing environment variables
 const missingEnvVars = Object.entries(requiredEnvVars)
   .filter(([_, value]) => !value)
