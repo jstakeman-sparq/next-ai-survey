@@ -8,8 +8,15 @@ backend:
         - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
 frontend:
   phases:
+    preBuild:
+      commands:
+        # Increase Node.js memory limit to prevent SIGKILL
+        - export NODE_OPTIONS="--max_old_space_size=4096"
+        # Clean any previous builds
+        - rm -rf .next
     build:
       commands:
+        # Build with optimized settings
         - npm run build
   artifacts:
     baseDirectory: .next
