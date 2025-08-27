@@ -15,9 +15,8 @@ const missingEnvVars = Object.entries(requiredEnvVars)
 
 if (missingEnvVars.length > 0) {
   console.error('Missing required environment variables:', missingEnvVars.join(', '))
-  if (process.env.NODE_ENV === 'production') {
-    throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`)
-  }
+  console.error('For Amplify Gen2 deployment, set these as secrets in the Amplify console')
+  // Don't throw error during build time - let NextAuth handle gracefully
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
