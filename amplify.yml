@@ -12,8 +12,8 @@ backend:
         - npm install --no-save @aws-amplify/backend-cli@latest
         # Set NODE_PATH so TypeScript can find modules from root
         - export NODE_PATH=$PWD/node_modules:$NODE_PATH
-        # Deploy backend using explicit path
-        - ./node_modules/.bin/ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+        # Deploy backend using direct JavaScript path (avoid symlink issues)
+        - node ./node_modules/@aws-amplify/backend-cli/lib/ampx.js pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
 frontend:
   phases:
     build:
