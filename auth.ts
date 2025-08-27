@@ -1,7 +1,28 @@
 import NextAuth from "next-auth"
 
+// Validate required environment variables
+const requiredEnvVars = {
+  AUTH_SECRET: process.env.AUTH_SECRET,
+  AUTH_JUMPCLOUD_ISSUER: process.env.AUTH_JUMPCLOUD_ISSUER,
+  AUTH_JUMPCLOUD_ID: process.env.AUTH_JUMPCLOUD_ID,
+  AUTH_JUMPCLOUD_SECRET: process.env.AUTH_JUMPCLOUD_SECRET,
+}
+
+// Check for missing environment variables
+const missingEnvVars = Object.entries(requiredEnvVars)
+  .filter(([_, value]) => !value)
+  .map(([key]) => key)
+
+if (missingEnvVars.length > 0) {
+  console.error('Missing required environment variables:', missingEnvVars.join(', '))
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`)
+  }
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   secret: process.env.AUTH_SECRET,
+  trustHost: true,
   providers: [
     {
       id: "jumpcloud",
@@ -34,4 +55,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
     signIn: "/admin/login",
   },
+  debug: process.env.NODE_ENV === 'development',
 })

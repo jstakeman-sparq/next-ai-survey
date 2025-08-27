@@ -1,6 +1,14 @@
 import { signIn } from "@/auth"
 
-export default function LoginPage() {
+interface LoginPageProps {
+  searchParams: {
+    error?: string;
+    callbackUrl?: string;
+  }
+}
+
+export default function LoginPage({ searchParams }: LoginPageProps) {
+  const { error, callbackUrl } = searchParams;
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -12,6 +20,30 @@ export default function LoginPage() {
             Sign in with your JumpCloud account to access the admin dashboard
           </p>
         </div>
+
+        {error && (
+          <div className="rounded-md bg-red-50 p-4">
+            <div className="flex">
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-red-800">
+                  Authentication Error
+                </h3>
+                <div className="mt-2 text-sm text-red-700">
+                  <p>
+                    {error === 'Configuration' 
+                      ? 'There was a problem with the server configuration. Please contact support.'
+                      : error === 'AccessDenied'
+                      ? 'Access denied. Please check your credentials and try again.'
+                      : error === 'Verification'
+                      ? 'Unable to verify your identity. Please try again.'
+                      : `Authentication failed: ${error}`
+                    }
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         
         <div className="mt-8 space-y-6">
           <form
