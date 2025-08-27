@@ -13,19 +13,27 @@ frontend:
     build:
       commands:
         # Parse Amplify secrets from JSON and export as environment variables
+        - 'echo "DEBUG: Checking for secrets variable..."'
         - 'if [ -n "$secrets" ]; then
+            echo "DEBUG: Found secrets, parsing...";
+            echo "DEBUG: Raw secrets = $secrets";
             export AUTH_SECRET=$(echo "$secrets" | sed -n "s/.*\"AUTH_SECRET\":\"\\([^\"]*\\)\".*/\\1/p");
             export AUTH_JUMPCLOUD_ISSUER=$(echo "$secrets" | sed -n "s/.*\"AUTH_JUMPCLOUD_ISSUER\":\"\\([^\"]*\\)\".*/\\1/p");
             export AUTH_JUMPCLOUD_ID=$(echo "$secrets" | sed -n "s/.*\"AUTH_JUMPCLOUD_ID\":\"\\([^\"]*\\)\".*/\\1/p");
             export AUTH_JUMPCLOUD_SECRET=$(echo "$secrets" | sed -n "s/.*\"AUTH_JUMPCLOUD_SECRET\":\"\\([^\"]*\\)\".*/\\1/p");
             export AUTH_URL=$(echo "$secrets" | sed -n "s/.*\"AUTH_URL\":\"\\([^\"]*\\)\".*/\\1/p");
+            echo "DEBUG: Parsed AUTH_JUMPCLOUD_ISSUER = $AUTH_JUMPCLOUD_ISSUER";
+          else
+            echo "DEBUG: No secrets variable found";
           fi'
         # Write environment variables to .env.production for SSR runtime
-        - 'if [ -n "$AUTH_SECRET" ]; then echo "AUTH_SECRET=$AUTH_SECRET" >> .env.production; fi'
-        - 'if [ -n "$AUTH_JUMPCLOUD_ISSUER" ]; then echo "AUTH_JUMPCLOUD_ISSUER=$AUTH_JUMPCLOUD_ISSUER" >> .env.production; fi'
-        - 'if [ -n "$AUTH_JUMPCLOUD_ID" ]; then echo "AUTH_JUMPCLOUD_ID=$AUTH_JUMPCLOUD_ID" >> .env.production; fi'
-        - 'if [ -n "$AUTH_JUMPCLOUD_SECRET" ]; then echo "AUTH_JUMPCLOUD_SECRET=$AUTH_JUMPCLOUD_SECRET" >> .env.production; fi'
-        - 'if [ -n "$AUTH_URL" ]; then echo "AUTH_URL=$AUTH_URL" >> .env.production; fi'
+        - 'echo "DEBUG: Writing environment variables to .env.production..."'
+        - 'if [ -n "$AUTH_SECRET" ]; then echo "AUTH_SECRET=$AUTH_SECRET" >> .env.production; echo "DEBUG: Wrote AUTH_SECRET"; fi'
+        - 'if [ -n "$AUTH_JUMPCLOUD_ISSUER" ]; then echo "AUTH_JUMPCLOUD_ISSUER=$AUTH_JUMPCLOUD_ISSUER" >> .env.production; echo "DEBUG: Wrote AUTH_JUMPCLOUD_ISSUER"; fi'
+        - 'if [ -n "$AUTH_JUMPCLOUD_ID" ]; then echo "AUTH_JUMPCLOUD_ID=$AUTH_JUMPCLOUD_ID" >> .env.production; echo "DEBUG: Wrote AUTH_JUMPCLOUD_ID"; fi'
+        - 'if [ -n "$AUTH_JUMPCLOUD_SECRET" ]; then echo "AUTH_JUMPCLOUD_SECRET=$AUTH_JUMPCLOUD_SECRET" >> .env.production; echo "DEBUG: Wrote AUTH_JUMPCLOUD_SECRET"; fi'
+        - 'if [ -n "$AUTH_URL" ]; then echo "AUTH_URL=$AUTH_URL" >> .env.production; echo "DEBUG: Wrote AUTH_URL"; fi'
+        - 'echo "DEBUG: Contents of .env.production:"; cat .env.production || echo "DEBUG: .env.production not found"'
         - npm run build
   artifacts:
     baseDirectory: .next
