@@ -5,15 +5,9 @@ backend:
       commands:
         # Set up Node.js environment
         - nvm use 20
-        # Install root dependencies (contains @aws-amplify/backend)
         - npm cache clean --force
         - npm ci --cache .npm --prefer-offline
-        # Explicitly install backend CLI to ensure availability
-        - npm install --no-save @aws-amplify/backend-cli@latest
-        # Set NODE_PATH so TypeScript can find modules from root
-        - export NODE_PATH=$PWD/node_modules:$NODE_PATH
-        # Deploy backend using direct JavaScript path (avoid symlink issues)
-        - node ./node_modules/@aws-amplify/backend-cli/lib/ampx.js pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+        - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
 frontend:
   phases:
     build:
