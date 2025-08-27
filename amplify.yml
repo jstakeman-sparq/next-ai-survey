@@ -17,12 +17,18 @@ frontend:
         - 'if [ -n "$secrets" ]; then
             echo "DEBUG: Found secrets, parsing...";
             echo "DEBUG: Raw secrets = $secrets";
-            export AUTH_SECRET=$(echo "$secrets" | sed -n "s/.*\"AUTH_SECRET\":\"\\([^\"]*\\)\".*/\\1/p");
-            export AUTH_JUMPCLOUD_ISSUER=$(echo "$secrets" | sed -n "s/.*\"AUTH_JUMPCLOUD_ISSUER\":\"\\([^\"]*\\)\".*/\\1/p");
-            export AUTH_JUMPCLOUD_ID=$(echo "$secrets" | sed -n "s/.*\"AUTH_JUMPCLOUD_ID\":\"\\([^\"]*\\)\".*/\\1/p");
-            export AUTH_JUMPCLOUD_SECRET=$(echo "$secrets" | sed -n "s/.*\"AUTH_JUMPCLOUD_SECRET\":\"\\([^\"]*\\)\".*/\\1/p");
-            export AUTH_URL=$(echo "$secrets" | sed -n "s/.*\"AUTH_URL\":\"\\([^\"]*\\)\".*/\\1/p");
-            echo "DEBUG: Parsed AUTH_JUMPCLOUD_ISSUER = $AUTH_JUMPCLOUD_ISSUER";
+            if [ "$secrets" = "{}" ]; then
+              echo "ERROR: Secrets variable is empty JSON {}";
+              echo "ERROR: Please configure secrets in Amplify console at path: /amplify/{app-id}/{branch}/";
+              echo "ERROR: Required secrets: AUTH_SECRET, AUTH_JUMPCLOUD_ISSUER, AUTH_JUMPCLOUD_ID, AUTH_JUMPCLOUD_SECRET, AUTH_URL";
+            else
+              export AUTH_SECRET=$(echo "$secrets" | sed -n "s/.*\"AUTH_SECRET\":\"\\([^\"]*\\)\".*/\\1/p");
+              export AUTH_JUMPCLOUD_ISSUER=$(echo "$secrets" | sed -n "s/.*\"AUTH_JUMPCLOUD_ISSUER\":\"\\([^\"]*\\)\".*/\\1/p");
+              export AUTH_JUMPCLOUD_ID=$(echo "$secrets" | sed -n "s/.*\"AUTH_JUMPCLOUD_ID\":\"\\([^\"]*\\)\".*/\\1/p");
+              export AUTH_JUMPCLOUD_SECRET=$(echo "$secrets" | sed -n "s/.*\"AUTH_JUMPCLOUD_SECRET\":\"\\([^\"]*\\)\".*/\\1/p");
+              export AUTH_URL=$(echo "$secrets" | sed -n "s/.*\"AUTH_URL\":\"\\([^\"]*\\)\".*/\\1/p");
+              echo "DEBUG: Parsed AUTH_JUMPCLOUD_ISSUER = $AUTH_JUMPCLOUD_ISSUER";
+            fi;
           else
             echo "DEBUG: No secrets variable found";
           fi'
