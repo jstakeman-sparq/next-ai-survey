@@ -32,35 +32,34 @@ const getSecret = () => {
       : 'development-fallback-secret-please-set-auth-secret';
   }
   
-  return authSecret;
+  return String(authSecret);
+};
+
+// JumpCloud OIDC Configuration
+const jumpCloudConfig = {
+  id: "jumpcloud",
+  name: "JumpCloud",
+  type: "oidc" as const,
+  issuer: String(requiredEnvVars.AUTH_JUMPCLOUD_ISSUER || ''),
+  clientId: String(requiredEnvVars.AUTH_JUMPCLOUD_ID || ''),
+  clientSecret: String(requiredEnvVars.AUTH_JUMPCLOUD_SECRET || ''),
+  authorization: {
+    params: {
+      scope: "openid profile email"
+    }
+  },
+  profile(profile: any) {
+    return {
+      id: profile.sub,
+      email: profile.email,
+    }
+  },
 };
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   secret: getSecret(),
   trustHost: true,
-  providers: requiredEnvVars.AUTH_JUMPCLOUD_ISSUER ? [
-    {
-      id: "jumpcloud",
-      name: "JumpCloud",
-      type: "oidc",
-      issuer: requiredEnvVars.AUTH_JUMPCLOUD_ISSUER,
-      clientId: requiredEnvVars.AUTH_JUMPCLOUD_ID,
-      clientSecret: requiredEnvVars.AUTH_JUMPCLOUD_SECRET,
-      authorization: {
-        params: {
-          scope: "openid profile email"
-        }
-      },
-      profile(profile) {
-        return {
-          id: profile.sub,
-          name: profile.name || `${profile.given_name} ${profile.family_name}`,
-          email: profile.email,
-          image: profile.picture,
-        }
-      },
-    }
-  ] : [],
+  providers: requiredEnvVars.AUTH_JUMPCLOUD_ISSUER ? [jumpCloudConfig] : [],
   callbacks: {
     authorized: async ({ auth }) => {
       // Return true if user is authenticated
