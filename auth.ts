@@ -1,28 +1,31 @@
 import NextAuth from "next-auth"
 
-// Try to import Amplify secrets, fallback to env vars
-let amplifySecrets: any = null;
-try {
-  const { secret } = require('@aws-amplify/backend');
-  amplifySecrets = {
-    AUTH_SECRET: secret('AUTH_SECRET'),
-    AUTH_JUMPCLOUD_ISSUER: secret('AUTH_JUMPCLOUD_ISSUER'),
-    AUTH_JUMPCLOUD_ID: secret('AUTH_JUMPCLOUD_ID'),
-    AUTH_JUMPCLOUD_SECRET: secret('AUTH_JUMPCLOUD_SECRET'),
-    AUTH_URL: secret('AUTH_URL'),
-  };
-} catch (error) {
-  // Amplify backend not available (likely edge runtime or build time)
-  console.log('Amplify backend not available, using environment variables');
-}
+// In Amplify Gen2, secrets are provided as JSON in $secrets variable
+// They are parsed in amplify.yml and written to .env.production
+// Next.js automatically loads .env.production in production builds
 
-// Load secrets from Amplify if available, otherwise use environment variables
+// Auto-detect production URL if AUTH_URL is not set
+const getAuthUrl = () => {
+  // First try to get from environment variables (Amplify secrets are injected here)
+  const configuredUrl = process.env.AUTH_URL || process.env.NEXTAUTH_URL;
+  if (configuredUrl) return configuredUrl;
+  
+  // Auto-detect for Amplify production deployment
+  if (process.env.NODE_ENV === 'production' && process.env.AWS_REGION) {
+    // This is likely an Amplify deployment - construct the URL
+    return `https://master.d322titcdljuli.amplifyapp.com`;
+  }
+  
+  return undefined;
+};
+
+// Load environment variables (Amplify secrets are automatically injected)
 const requiredEnvVars = {
-  AUTH_SECRET: amplifySecrets?.AUTH_SECRET || process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
-  AUTH_JUMPCLOUD_ISSUER: amplifySecrets?.AUTH_JUMPCLOUD_ISSUER || process.env.AUTH_JUMPCLOUD_ISSUER,
-  AUTH_JUMPCLOUD_ID: amplifySecrets?.AUTH_JUMPCLOUD_ID || process.env.AUTH_JUMPCLOUD_ID,
-  AUTH_JUMPCLOUD_SECRET: amplifySecrets?.AUTH_JUMPCLOUD_SECRET || process.env.AUTH_JUMPCLOUD_SECRET,
-  AUTH_URL: amplifySecrets?.AUTH_URL || process.env.AUTH_URL || process.env.NEXTAUTH_URL,
+  AUTH_SECRET: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
+  AUTH_JUMPCLOUD_ISSUER: process.env.AUTH_JUMPCLOUD_ISSUER,
+  AUTH_JUMPCLOUD_ID: process.env.AUTH_JUMPCLOUD_ID,
+  AUTH_JUMPCLOUD_SECRET: process.env.AUTH_JUMPCLOUD_SECRET,
+  AUTH_URL: getAuthUrl(),
 }
 
 // Log NextAuth URL configuration
@@ -31,7 +34,7 @@ console.log('- AUTH_URL (env):', process.env.AUTH_URL)
 console.log('- NEXTAUTH_URL (env):', process.env.NEXTAUTH_URL)
 console.log('- AUTH_URL (resolved):', requiredEnvVars.AUTH_URL)
 console.log('- NODE_ENV:', process.env.NODE_ENV)
-console.log('- Amplify secrets available:', !!amplifySecrets)
+console.log('- AWS_REGION:', process.env.AWS_REGION)
 
 // Check for missing environment variables
 const missingEnvVars = Object.entries(requiredEnvVars)
