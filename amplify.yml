@@ -10,10 +10,14 @@ frontend:
   phases:
     preBuild:
       commands:
+        # Set up Node.js and environment
+        - nvm use 20
         # Increase Node.js memory limit to prevent SIGKILL
         - export NODE_OPTIONS="--max_old_space_size=4096"
         # Clean any previous builds
         - rm -rf .next
+        # Install frontend dependencies
+        - npm ci --cache .npm --prefer-offline
     build:
       commands:
         # Build with optimized settings
