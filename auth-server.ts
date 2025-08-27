@@ -1,11 +1,12 @@
 import NextAuth from "next-auth"
+import { secret } from '@aws-amplify/backend';
 
-// Edge-compatible auth configuration (no Amplify backend imports)
+// Server-side auth configuration with Amplify secrets
 const requiredEnvVars = {
-  AUTH_SECRET: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
-  AUTH_JUMPCLOUD_ISSUER: process.env.AUTH_JUMPCLOUD_ISSUER,
-  AUTH_JUMPCLOUD_ID: process.env.AUTH_JUMPCLOUD_ID,
-  AUTH_JUMPCLOUD_SECRET: process.env.AUTH_JUMPCLOUD_SECRET,
+  AUTH_SECRET: secret('AUTH_SECRET'),
+  AUTH_JUMPCLOUD_ISSUER: secret('AUTH_JUMPCLOUD_ISSUER'),
+  AUTH_JUMPCLOUD_ID: secret('AUTH_JUMPCLOUD_ID'),
+  AUTH_JUMPCLOUD_SECRET: secret('AUTH_JUMPCLOUD_SECRET'),
 }
 
 // Check for missing environment variables
@@ -13,6 +14,13 @@ const missingEnvVars = Object.entries(requiredEnvVars)
   .filter(([_, value]) => !value)
   .map(([key]) => key)
 
+// Debug logging for Amplify deployment
+console.log('Environment check:')
+console.log('NODE_ENV:', process.env.NODE_ENV)
+console.log('AUTH_SECRET present:', !!requiredEnvVars.AUTH_SECRET)
+console.log('AUTH_JUMPCLOUD_ISSUER present:', !!requiredEnvVars.AUTH_JUMPCLOUD_ISSUER)
+console.log('AUTH_JUMPCLOUD_ID present:', !!requiredEnvVars.AUTH_JUMPCLOUD_ID)
+console.log('AUTH_JUMPCLOUD_SECRET present:', !!requiredEnvVars.AUTH_JUMPCLOUD_SECRET)
 
 if (missingEnvVars.length > 0) {
   console.error('Missing required environment variables:', missingEnvVars.join(', '))
@@ -25,16 +33,14 @@ const getSecret = () => {
   const authSecret = requiredEnvVars.AUTH_SECRET;
   
   if (!authSecret) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('No AUTH_SECRET found. Using fallback (not recommended for production)');
-    }
+    console.warn('No AUTH_SECRET found. Using fallback (not recommended for production)');
     // Generate a deterministic fallback secret based on deployment environment
     return process.env.NODE_ENV === 'production' 
       ? 'missing-secret-please-configure-in-amplify-console'
       : 'development-fallback-secret-please-set-auth-secret';
   }
   
-  return authSecret;
+  return String(authSecret);
 };
 
 // JumpCloud OIDC Configuration
@@ -42,9 +48,9 @@ const jumpCloudConfig = {
   id: "jumpcloud",
   name: "JumpCloud",
   type: "oidc" as const,
-  issuer: requiredEnvVars.AUTH_JUMPCLOUD_ISSUER || '',
-  clientId: requiredEnvVars.AUTH_JUMPCLOUD_ID || '',
-  clientSecret: requiredEnvVars.AUTH_JUMPCLOUD_SECRET || '',
+  issuer: String(requiredEnvVars.AUTH_JUMPCLOUD_ISSUER || ''),
+  clientId: String(requiredEnvVars.AUTH_JUMPCLOUD_ID || ''),
+  clientSecret: String(requiredEnvVars.AUTH_JUMPCLOUD_SECRET || ''),
   authorization: {
     params: {
       scope: "openid profile email"
@@ -72,4 +78,4 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: "/admin/login",
   },
   debug: process.env.NODE_ENV === 'development',
-})
+});

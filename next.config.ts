@@ -4,18 +4,12 @@ const nextConfig: NextConfig = {
   // Optimize for Amplify deployment
   output: 'standalone',
   
-  // Reduce memory usage during build
-  experimental: {
-    // Use SWC minifier for better performance
-    swcMinify: true,
-  },
-  
   // Optimize images for better performance
   images: {
     unoptimized: true, // For static exports if needed
   },
   
-  // Reduce bundle size
+  // Reduce bundle size and optimize webpack
   webpack: (config, { isServer }) => {
     // Optimize for production builds
     if (!isServer) {
@@ -25,7 +19,21 @@ const nextConfig: NextConfig = {
       };
     }
     
+    // Exclude Amplify backend packages from Edge middleware
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@aws-amplify/backend': false,
+      '@aws-amplify/graphql-generator': false,
+      '@aws-amplify/graphql-types-generator': false,
+    };
+    
     return config;
+  },
+  
+  // Optimize compilation
+  compiler: {
+    // Remove console logs in production
+    removeConsole: process.env.NODE_ENV === 'production',
   },
 };
 
