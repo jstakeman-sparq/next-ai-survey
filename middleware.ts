@@ -13,9 +13,12 @@ export default auth((req) => {
   }
   
   // Redirect unauthenticated users to login
-  if (!req.auth && req.nextUrl.pathname.startsWith("/admin")) {
+  if (!req.auth && req.nextUrl.pathname.startsWith("/admin") && req.nextUrl.pathname !== "/admin/login") {
     const newUrl = new URL("/admin/login", req.nextUrl.origin)
-    newUrl.searchParams.set("callbackUrl", req.nextUrl.href)
+    // Only set callbackUrl if it's not the root admin path to avoid loops
+    if (req.nextUrl.pathname !== "/admin") {
+      newUrl.searchParams.set("callbackUrl", req.nextUrl.href)
+    }
     return Response.redirect(newUrl)
   }
 })
