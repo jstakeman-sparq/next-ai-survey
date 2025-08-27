@@ -10,6 +10,14 @@ import outputs from '@/amplify_outputs.json'
 Amplify.configure(outputs)
 const client = generateClient<Schema>()
 
+// Debug logging for configuration
+console.log('🔧 Amplify Configuration:', {
+  dataUrl: outputs.data?.url,
+  region: outputs.data?.aws_region,
+  hasApiKey: !!outputs.data?.api_key,
+  defaultAuthType: outputs.data?.default_authorization_type
+})
+
 interface Survey {
   id: string
   title: string
@@ -29,16 +37,32 @@ export default function SurveyList() {
 
   const loadSurveys = async () => {
     try {
+      console.log('🔍 Starting survey fetch...')
       setIsLoading(true)
       setError(null)
       
+      console.log('📡 Calling client.models.Survey.list()...')
+      console.log('🌐 Network connectivity check...', navigator.onLine ? 'Online' : 'Offline')
+      
+      const startTime = Date.now()
       const { data: surveyData, errors } = await client.models.Survey.list()
+      const endTime = Date.now()
+      
+      console.log('⏱️ API call took:', endTime - startTime, 'ms')
+      
+      console.log('📊 Raw survey data received:', {
+        dataCount: surveyData?.length || 0,
+        hasErrors: !!errors,
+        errors: errors
+      })
       
       if (errors) {
-        console.error('GraphQL errors:', errors)
+        console.error('❌ GraphQL errors:', errors)
         setError('Failed to load surveys')
         return
       }
+
+      console.log('📋 Full survey data:', surveyData)
 
       // Transform the data to match our interface
       const transformedSurveys: Survey[] = surveyData.map(survey => ({
@@ -53,12 +77,18 @@ export default function SurveyList() {
         companyName: survey.companyName || 'Unknown'
       }))
 
+      console.log('✅ Transformed surveys:', {
+        count: transformedSurveys.length,
+        surveys: transformedSurveys
+      })
+
       setSurveys(transformedSurveys)
     } catch (err) {
-      console.error('Error loading surveys:', err)
+      console.error('💥 Error loading surveys:', err)
       setError('Failed to load surveys')
     } finally {
       setIsLoading(false)
+      console.log('🏁 Survey fetch complete')
     }
   }
 

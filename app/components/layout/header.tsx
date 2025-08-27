@@ -20,6 +20,12 @@ export function Header() {
             >
               Case Studies
             </Link>
+            <Link 
+              href="/survey" 
+              className="text-white hover:text-brand-cta transition-colors font-medium"
+            >
+              AI Assessment
+            </Link>
           </nav>
         </div>
       </div>
