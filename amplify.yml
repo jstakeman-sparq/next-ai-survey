@@ -14,6 +14,7 @@ frontend:
       commands:
         # Parse Amplify secrets from JSON and export as environment variables
         - 'if [ -n "$secrets" ]; then
+            echo "DEBUG: Raw secrets variable: $secrets";
             if [ "$secrets" = "{}" ]; then
               echo "ERROR: Secrets variable is empty. Please configure secrets in Amplify console.";
             else
@@ -22,7 +23,12 @@ frontend:
               export AUTH_JUMPCLOUD_ID=$(echo "$secrets" | sed -n "s/.*\"AUTH_JUMPCLOUD_ID\":\"\\([^\"]*\\)\".*/\\1/p");
               export AUTH_JUMPCLOUD_SECRET=$(echo "$secrets" | sed -n "s/.*\"AUTH_JUMPCLOUD_SECRET\":\"\\([^\"]*\\)\".*/\\1/p");
               export AUTH_URL=$(echo "$secrets" | sed -n "s/.*\"AUTH_URL\":\"\\([^\"]*\\)\".*/\\1/p");
+              echo "DEBUG: Parsed AUTH_JUMPCLOUD_ID: ${AUTH_JUMPCLOUD_ID:-NOT_SET}";
+              echo "DEBUG: Parsed AUTH_JUMPCLOUD_SECRET: ${AUTH_JUMPCLOUD_SECRET:-NOT_SET}";
+              echo "DEBUG: Parsed AUTH_JUMPCLOUD_ISSUER: ${AUTH_JUMPCLOUD_ISSUER:-NOT_SET}";
             fi;
+          else
+            echo "DEBUG: No secrets variable found";
           fi'
         # Write environment variables to .env.production for SSR runtime
         - 'if [ -n "$AUTH_SECRET" ]; then echo "AUTH_SECRET=$AUTH_SECRET" >> .env.production; fi'
