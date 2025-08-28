@@ -69,19 +69,19 @@ const getSecret = () => {
 const jumpCloudConfig = {
   id: "jumpcloud",
   name: "JumpCloud",
-  type: "oidc" as const,
-  checks: ["state", "nonce", "pkce"] as ("state" | "nonce" | "pkce" | "none")[],
+  type: "oidc",
+  checks: ["state", "nonce"] as ("state" | "nonce" | "pkce" | "none")[],
   // issuer: requiredEnvVars.AUTH_JUMPCLOUD_ISSUER || '',
   // issuerUrl: requiredEnvVars.AUTH_JUMPCLOUD_ISSUER || '',
   wellKnown: "https://oauth.id.jumpcloud.com/.well-known/openid-configuration",
   clientId: "5b5ef794-3385-4cae-b39f-c84049ac372e",
-  clientSecret: requiredEnvVars.AUTH_JUMPCLOUD_SECRET || '',
+  clientSecret: "tWKyClyF8lLuTXqSbGmRtvLPQk",
   client: {
     token_endpoint_auth_method: "client_secret_post"
   },
   authorization: {
     params: {
-      scope: "email"
+      scope: "openid profile email"
     }
   },
   profile(profile: any) {
@@ -93,9 +93,9 @@ const jumpCloudConfig = {
 };
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  secret: getSecret(),
+  secret: 'mUGM+RtgL6wcEBvyMTqQuSsR/G3nIE+C0JVEdzmLngg=',
   trustHost: true,
-  providers: [jumpCloudConfig],
+  providers: [jumpCloudConfig] as any,
   callbacks: {
     authorized: async ({ auth }) => {
       // Return true if user is authenticated
