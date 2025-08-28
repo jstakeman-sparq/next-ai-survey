@@ -68,16 +68,16 @@ const jumpCloudConfig = {
   checks: ["state", "nonce"] as ("state" | "nonce" | "pkce" | "none")[],
   // issuer: requiredEnvVars.AUTH_JUMPCLOUD_ISSUER || '',
   // issuerUrl: requiredEnvVars.AUTH_JUMPCLOUD_ISSUER || '',
-  wellKnown: "https://oauth.id.jumpcloud.com/.well-known/openid-configuration",
+  issuer: "https://oauth.id.jumpcloud.com",
   clientId: "5b5ef794-3385-4cae-b39f-c84049ac372e",
   clientSecret: "tWKyClyF8lLuTXqSbGmRtvLPQk",
   client: {
     token_endpoint_auth_method: "client_secret_post"
   },
   authorization: {
-    url: "https://oauth.id.jumpcloud.com/oauth2/auth",
     params: {
-      scope: "openid profile email"
+      scope: "openid profile email",
+      response_type: "code"
     }
   },
   profile(profile: any) {
