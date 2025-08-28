@@ -70,7 +70,7 @@ const jumpCloudConfig = {
   id: "jumpcloud",
   name: "JumpCloud",
   type: "oidc" as const,
-  checks: ["state", "nonce"],
+  checks: ["state", "nonce"] as ("state" | "nonce" | "pkce" | "none")[],
   issuer: requiredEnvVars.AUTH_JUMPCLOUD_ISSUER || '',
   clientId: requiredEnvVars.AUTH_JUMPCLOUD_ID || '',
   clientSecret: requiredEnvVars.AUTH_JUMPCLOUD_SECRET || '',
