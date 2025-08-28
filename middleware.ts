@@ -1,10 +1,10 @@
 import { auth } from "@/auth"
 
 export default auth((req) => {
-  // Skip authentication in non-production environments
-  if (process.env.NODE_ENV !== 'production') {
-    return
-  }
+  // Enable authentication in all environments for debugging
+  // if (process.env.NODE_ENV !== 'production') {
+  //   return
+  // }
   
   // Allow access to login page and auth routes
   if (req.nextUrl.pathname === "/admin/login" || 

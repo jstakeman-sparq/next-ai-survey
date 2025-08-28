@@ -76,7 +76,7 @@ const jumpCloudConfig = {
   clientId: requiredEnvVars.AUTH_JUMPCLOUD_ID || '',
   clientSecret: requiredEnvVars.AUTH_JUMPCLOUD_SECRET || '',
   client: {
-    token_endpoint_auth_method: "client_secret_post"
+    token_endpoint_auth_method: "client_secret_basic"
   },
   authorization: {
     params: {
