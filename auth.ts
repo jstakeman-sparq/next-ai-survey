@@ -80,6 +80,7 @@ const jumpCloudConfig = {
     token_endpoint_auth_method: "client_secret_post"
   },
   authorization: {
+    url: "https://oauth.id.jumpcloud.com/oauth2/auth",
     params: {
       scope: "openid profile email"
     }
