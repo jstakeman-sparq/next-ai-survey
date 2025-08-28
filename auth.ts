@@ -30,11 +30,11 @@ const requiredEnvVars = {
 
 // Log NextAuth URL configuration
 console.log('NextAuth Configuration:')
-console.log('- AUTH_URL (env):', process.env.AUTH_URL)
-console.log('- NEXTAUTH_URL (env):', process.env.NEXTAUTH_URL)
 console.log('- AUTH_URL (resolved):', requiredEnvVars.AUTH_URL)
 console.log('- NODE_ENV:', process.env.NODE_ENV)
-console.log('- AWS_REGION:', process.env.AWS_REGION)
+console.log('- JumpCloud Issuer:', requiredEnvVars.AUTH_JUMPCLOUD_ISSUER || 'NOT SET')
+console.log('- JumpCloud Client ID:', requiredEnvVars.AUTH_JUMPCLOUD_ID ? 'SET' : 'NOT SET')
+console.log('- JumpCloud Client Secret:', requiredEnvVars.AUTH_JUMPCLOUD_SECRET ? 'SET' : 'NOT SET')
 
 // Check for missing environment variables
 const missingEnvVars = Object.entries(requiredEnvVars)
@@ -70,9 +70,13 @@ const jumpCloudConfig = {
   id: "jumpcloud",
   name: "JumpCloud",
   type: "oidc" as const,
+  checks: ["state", "nonce"],
   issuer: requiredEnvVars.AUTH_JUMPCLOUD_ISSUER || '',
   clientId: requiredEnvVars.AUTH_JUMPCLOUD_ID || '',
   clientSecret: requiredEnvVars.AUTH_JUMPCLOUD_SECRET || '',
+  client: {
+    token_endpoint_auth_method: "client_secret_post"
+  },
   authorization: {
     params: {
       scope: "openid profile email"
