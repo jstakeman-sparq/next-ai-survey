@@ -10,13 +10,8 @@ const getAuthUrl = () => {
   const configuredUrl = process.env.AUTH_URL || process.env.NEXTAUTH_URL;
   if (configuredUrl) return configuredUrl;
   
-  // Auto-detect for Amplify production deployment
-  if (process.env.NODE_ENV === 'production' && process.env.AWS_REGION) {
-    // This is likely an Amplify deployment - construct the URL
-    return `https://master.d322titcdljuli.amplifyapp.com`;
-  }
-  
-  return undefined;
+  // Use production domain for consistent redirect URIs
+  return `https://ai.teamsparq.com`;
 };
 
 // Load environment variables (Amplify secrets are automatically injected)
@@ -80,7 +75,7 @@ const jumpCloudConfig = {
     token_endpoint_auth_method: "client_secret_post"
   },
   authorization: {
-    // url: "https://oauth.id.jumpcloud.com/oauth2/auth",
+    url: "https://oauth.id.jumpcloud.com/oauth2/auth",
     params: {
       scope: "openid profile email"
     }
