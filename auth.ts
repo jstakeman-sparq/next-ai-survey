@@ -74,8 +74,7 @@ const jumpCloudConfig = {
   // issuer: requiredEnvVars.AUTH_JUMPCLOUD_ISSUER || '',
   // issuerUrl: requiredEnvVars.AUTH_JUMPCLOUD_ISSUER || '',
   wellKnown: "https://oauth.id.jumpcloud.com/.well-known/openid-configuration",
-  clientId: requiredEnvVars.AUTH_JUMPCLOUD_ID || '',
-  clientID: requiredEnvVars.AUTH_JUMPCLOUD_ID || '',
+  clientId: "5b5ef794-3385-4cae-b39f-c84049ac372e",
   clientSecret: requiredEnvVars.AUTH_JUMPCLOUD_SECRET || '',
   client: {
     token_endpoint_auth_method: "client_secret_post"
