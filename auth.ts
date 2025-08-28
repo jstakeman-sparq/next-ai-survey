@@ -72,6 +72,7 @@ const jumpCloudConfig = {
   type: "oidc" as const,
   checks: ["state", "nonce"] as ("state" | "nonce" | "pkce" | "none")[],
   issuer: requiredEnvVars.AUTH_JUMPCLOUD_ISSUER || '',
+  wellKnown: "https://oauth.id.jumpcloud.com/.well-known/openid-configuration",
   clientId: requiredEnvVars.AUTH_JUMPCLOUD_ID || '',
   clientSecret: requiredEnvVars.AUTH_JUMPCLOUD_SECRET || '',
   client: {
@@ -79,7 +80,7 @@ const jumpCloudConfig = {
   },
   authorization: {
     params: {
-      scope: "openid profile email"
+      scope: "email"
     }
   },
   profile(profile: any) {
