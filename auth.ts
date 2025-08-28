@@ -72,8 +72,10 @@ const jumpCloudConfig = {
   type: "oidc" as const,
   checks: ["state", "nonce"] as ("state" | "nonce" | "pkce" | "none")[],
   issuer: requiredEnvVars.AUTH_JUMPCLOUD_ISSUER || '',
+  issuerUrl: requiredEnvVars.AUTH_JUMPCLOUD_ISSUER || '',
   wellKnown: "https://oauth.id.jumpcloud.com/.well-known/openid-configuration",
   clientId: requiredEnvVars.AUTH_JUMPCLOUD_ID || '',
+  clientID: requiredEnvVars.AUTH_JUMPCLOUD_ID || '',
   clientSecret: requiredEnvVars.AUTH_JUMPCLOUD_SECRET || '',
   client: {
     token_endpoint_auth_method: "client_secret_basic"
