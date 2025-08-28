@@ -9,6 +9,17 @@ const nextConfig: NextConfig = {
     unoptimized: true, // For static exports if needed
   },
   
+  // Handle JumpCloud callback redirect
+  async redirects() {
+    return [
+      {
+        source: '/api/auth/callback',
+        destination: '/api/auth/callback/jumpcloud',
+        permanent: true,
+      },
+    ];
+  },
+  
   // Reduce bundle size and optimize webpack
   webpack: (config, { isServer }) => {
     // Optimize for production builds
