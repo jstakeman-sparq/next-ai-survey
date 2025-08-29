@@ -66,23 +66,28 @@ const getSecret = () => {
 const jumpCloudConfig = {
   id: "jumpcloud",
   name: "JumpCloud",
-  type: "oidc",
-  checks: ["state", "nonce"],
-  issuer: "https://oauth.id.jumpcloud.com",
+  type: "oauth" as const,
+  checks: ["state"],
+  authorization: {
+    url: "https://oauth.id.jumpcloud.com/oauth2/auth",
+    params: {
+      scope: "openid profile email",
+      response_type: "code"
+    }
+  },
+  token: "https://oauth.id.jumpcloud.com/oauth2/token",
+  userinfo: "https://oauth.id.jumpcloud.com/userinfo",
   clientId: "5b5ef794-3385-4cae-b39f-c84049ac372e",
   clientSecret: "tWKyClyF8lLuTXqSbGmRtvLPQk",
   client: {
     token_endpoint_auth_method: "client_secret_post"
   },
-  authorization: {
-    params: {
-      scope: "openid profile email"
-    }
-  },
   profile(profile: any) {
+    console.log('Profile received:', profile);
     return {
-      id: profile.sub,
+      id: profile.sub || profile.id,
       email: profile.email,
+      name: profile.name || profile.email,
     }
   },
 };
