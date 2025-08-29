@@ -10,8 +10,10 @@ const getAuthUrl = () => {
   const configuredUrl = process.env.AUTH_URL || process.env.NEXTAUTH_URL;
   if (configuredUrl) return configuredUrl;
   
-  // Use production domain for consistent redirect URIs
-  return `https://ai.teamsparq.com`;
+  // Use localhost in development, production domain otherwise
+  return process.env.NODE_ENV === 'development' 
+    ? 'http://localhost:3000'
+    : `https://ai.teamsparq.com`;
 };
 
 // Load environment variables (Amplify secrets are automatically injected)
@@ -65,9 +67,7 @@ const jumpCloudConfig = {
   id: "jumpcloud",
   name: "JumpCloud",
   type: "oidc",
-  checks: ["state", "nonce"] as ("state" | "nonce" | "pkce" | "none")[],
-  // issuer: requiredEnvVars.AUTH_JUMPCLOUD_ISSUER || '',
-  // issuerUrl: requiredEnvVars.AUTH_JUMPCLOUD_ISSUER || '',
+  checks: ["state", "nonce"],
   issuer: "https://oauth.id.jumpcloud.com",
   clientId: "5b5ef794-3385-4cae-b39f-c84049ac372e",
   clientSecret: "tWKyClyF8lLuTXqSbGmRtvLPQk",
@@ -76,8 +76,7 @@ const jumpCloudConfig = {
   },
   authorization: {
     params: {
-      scope: "openid profile email",
-      response_type: "code"
+      scope: "openid profile email"
     }
   },
   profile(profile: any) {
@@ -89,7 +88,7 @@ const jumpCloudConfig = {
 };
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  secret: 'mUGM+RtgL6wcEBvyMTqQuSsR/G3nIE+C0JVEdzmLngg=',
+  secret: getSecret(),
   trustHost: true,
   providers: [jumpCloudConfig] as any,
   callbacks: {
@@ -97,23 +96,39 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // Return true if user is authenticated
       return !!auth
     },
+    signIn: async ({ user, account, profile }) => {
+      console.log('SignIn callback:', { user, account, profile });
+      return true;
+    },
+    jwt: async ({ token, user, account }) => {
+      if (account && user) {
+        token.accessToken = account.access_token;
+      }
+      return token;
+    },
+    session: async ({ session, token }) => {
+      return session;
+    },
     redirect: async ({ url, baseUrl }) => {
-      // Ensure redirects use the correct base URL in production
-      const authUrl = requiredEnvVars.AUTH_URL;
-      const resolvedBaseUrl = authUrl || baseUrl;
+      console.log('Redirect callback:', { url, baseUrl });
+      
+      // After successful login, redirect to admin dashboard
+      if (url.includes('/api/auth/callback')) {
+        return `${baseUrl}/admin`;
+      }
       
       // If url is relative, resolve it against the base URL
       if (url.startsWith('/')) {
-        return `${resolvedBaseUrl}${url}`;
+        return `${baseUrl}${url}`;
       }
       
       // If url is absolute and matches the base domain, allow it
-      if (url.startsWith(resolvedBaseUrl)) {
+      if (url.startsWith(baseUrl)) {
         return url;
       }
       
-      // Default to base URL for safety
-      return resolvedBaseUrl;
+      // Default to admin dashboard
+      return `${baseUrl}/admin`;
     },
   },
   pages: {
