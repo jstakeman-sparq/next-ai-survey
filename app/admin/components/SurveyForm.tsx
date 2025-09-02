@@ -16,7 +16,7 @@ interface SurveyFormProps {
 }
 
 export default function SurveyForm({ onSurveyCreated }: SurveyFormProps) {
-  const { session } = useSession()
+  const { session, loading } = useSession()
   const [formData, setFormData] = useState<SurveyFormData>({
     shortCode: '',
     createdBy: '',
@@ -26,8 +26,11 @@ export default function SurveyForm({ onSurveyCreated }: SurveyFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
 
+  console.log('[SurveyForm] Component rendered with session:', session, 'loading:', loading)
+
   // Generate initial short code and pre-fill createdBy with session email
   useEffect(() => {
+    console.log('[SurveyForm] useEffect triggered with session:', session)
     setFormData(prev => ({
       ...prev,
       shortCode: generateShortCode(),
