@@ -1,4 +1,6 @@
-import {signIn} from "@/auth"
+import {signIn, auth} from "@/auth"
+import { redirect } from "next/navigation"
+
 interface LoginPageProps {
   searchParams: Promise<{
     error?: string;
@@ -7,6 +9,12 @@ interface LoginPageProps {
 }
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
+  // Check if user is already authenticated
+  const session = await auth()
+  if (session) {
+    redirect('/admin')
+  }
+
   const { error, callbackUrl } = await searchParams;
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -48,7 +56,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           <form
             action={async () => {
               "use server"
-              await signIn("google")
+              await signIn("google", { redirectTo: callbackUrl || "/admin" })
             }}
           >
             <button
