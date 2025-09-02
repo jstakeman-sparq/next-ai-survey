@@ -1,27 +1,17 @@
-import { auth } from "@/auth"
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
 
-export default auth((req) => {
-  // Enable authentication in all environments for debugging
-  // if (process.env.NODE_ENV !== 'production') {
-  //   return
-  // }
-  
+export function middleware(request: NextRequest) {
   // Allow access to login page and auth routes
-  if (req.nextUrl.pathname === "/admin/login" || 
-      req.nextUrl.pathname.startsWith("/api/auth")) {
-    return
+  if (request.nextUrl.pathname === "/admin/login" || 
+      request.nextUrl.pathname.startsWith("/api/auth")) {
+    return NextResponse.next()
   }
   
-  // Redirect unauthenticated users to login
-  if (!req.auth && req.nextUrl.pathname.startsWith("/admin") && req.nextUrl.pathname !== "/admin/login") {
-    const newUrl = new URL("/admin/login", req.nextUrl.origin)
-    // Only set callbackUrl if it's not the root admin path to avoid loops
-    if (req.nextUrl.pathname !== "/admin") {
-      newUrl.searchParams.set("callbackUrl", req.nextUrl.href)
-    }
-    return Response.redirect(newUrl)
-  }
-})
+  // For now, allow access to admin routes - let client-side handle auth
+  // The SessionProvider will handle authentication state
+  return NextResponse.next()
+}
 
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
