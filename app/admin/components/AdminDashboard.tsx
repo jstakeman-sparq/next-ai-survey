@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useSession } from "next-auth/react"
 import AdminHeader from "./AdminHeader"
 import SurveyForm from "./SurveyForm"
 import SurveyList from "./SurveyList"
@@ -10,6 +11,7 @@ interface AdminDashboardProps {
 }
 
 export default function AdminDashboard({ user }: AdminDashboardProps) {
+  const { data: session } = useSession()
   const [refreshTrigger, setRefreshTrigger] = useState(0)
 
   const handleSurveyCreated = () => {
@@ -19,7 +21,7 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <AdminHeader user={user} />
+      <AdminHeader user={session?.user} />
       <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <div className="space-y-8">
           <div>

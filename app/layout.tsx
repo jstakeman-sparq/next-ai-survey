@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import AmplifyProvider from "./amplify-provider";
+import Providers from "./components/Providers";
 
 export const metadata: Metadata = {
   title: "Sparq - AI-Accelerated Product Execution",
@@ -16,9 +17,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <AmplifyProvider>
-          {children}
-        </AmplifyProvider>
+        <Providers>
+          <AmplifyProvider>
+            {children}
+          </AmplifyProvider>
+        </Providers>
       </body>
     </html>
   );
