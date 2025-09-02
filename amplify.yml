@@ -19,22 +19,19 @@ frontend:
               echo "ERROR: Secrets variable is empty. Please configure secrets in Amplify console.";
             else
               export AUTH_SECRET=$(echo "$secrets" | sed -n "s/.*\"AUTH_SECRET\":\"\\([^\"]*\\)\".*/\\1/p");
-              export AUTH_JUMPCLOUD_ISSUER=$(echo "$secrets" | sed -n "s/.*\"AUTH_JUMPCLOUD_ISSUER\":\"\\([^\"]*\\)\".*/\\1/p");
-              export AUTH_JUMPCLOUD_ID=$(echo "$secrets" | sed -n "s/.*\"AUTH_JUMPCLOUD_ID\":\"\\([^\"]*\\)\".*/\\1/p");
-              export AUTH_JUMPCLOUD_SECRET=$(echo "$secrets" | sed -n "s/.*\"AUTH_JUMPCLOUD_SECRET\":\"\\([^\"]*\\)\".*/\\1/p");
+              export AUTH_GOOGLE_ID=$(echo "$secrets" | sed -n "s/.*\"AUTH_GOOGLE_ID\":\"\\([^\"]*\\)\".*/\\1/p");
+              export AUTH_GOOGLE_SECRET=$(echo "$secrets" | sed -n "s/.*\"AUTH_GOOGLE_SECRET\":\"\\([^\"]*\\)\".*/\\1/p");
               export AUTH_URL=$(echo "$secrets" | sed -n "s/.*\"AUTH_URL\":\"\\([^\"]*\\)\".*/\\1/p");
-              echo "DEBUG: Parsed AUTH_JUMPCLOUD_ID: ${AUTH_JUMPCLOUD_ID:-NOT_SET}";
-              echo "DEBUG: Parsed AUTH_JUMPCLOUD_SECRET: ${AUTH_JUMPCLOUD_SECRET:-NOT_SET}";
-              echo "DEBUG: Parsed AUTH_JUMPCLOUD_ISSUER: ${AUTH_JUMPCLOUD_ISSUER:-NOT_SET}";
+              echo "DEBUG: Parsed AUTH_GOOGLE_ID: ${AUTH_GOOGLE_ID:-NOT_SET}";
+              echo "DEBUG: Parsed AUTH_GOOGLE_SECRET: ${AUTH_GOOGLE_SECRET:-NOT_SET}";
             fi;
           else
             echo "DEBUG: No secrets variable found";
           fi'
         # Write environment variables to .env.production for SSR runtime
         - 'if [ -n "$AUTH_SECRET" ]; then echo "AUTH_SECRET=$AUTH_SECRET" >> .env.production; fi'
-        - 'if [ -n "$AUTH_JUMPCLOUD_ISSUER" ]; then echo "AUTH_JUMPCLOUD_ISSUER=$AUTH_JUMPCLOUD_ISSUER" >> .env.production; fi'
-        - 'if [ -n "$AUTH_JUMPCLOUD_ID" ]; then echo "AUTH_JUMPCLOUD_ID=$AUTH_JUMPCLOUD_ID" >> .env.production; fi'
-        - 'if [ -n "$AUTH_JUMPCLOUD_SECRET" ]; then echo "AUTH_JUMPCLOUD_SECRET=$AUTH_JUMPCLOUD_SECRET" >> .env.production; fi'
+        - 'if [ -n "$AUTH_GOOGLE_ID" ]; then echo "AUTH_GOOGLE_ID=$AUTH_GOOGLE_ID" >> .env.production; fi'
+        - 'if [ -n "$AUTH_GOOGLE_SECRET" ]; then echo "AUTH_GOOGLE_SECRET=$AUTH_GOOGLE_SECRET" >> .env.production; fi'
         - 'if [ -n "$AUTH_URL" ]; then echo "AUTH_URL=$AUTH_URL" >> .env.production; fi'
         - npm run build
   artifacts:
