@@ -92,11 +92,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     redirect: async ({ url, baseUrl }) => {
       console.log('Redirect callback:', { url, baseUrl });
       
-      // After successful login, redirect to admin dashboard
-      if (url.includes('/api/auth/callback')) {
-        return `${baseUrl}/admin`;
-      }
-      
       // If url is relative, resolve it against the base URL
       if (url.startsWith('/')) {
         return `${baseUrl}${url}`;
@@ -107,7 +102,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return url;
       }
       
-      // Default to admin dashboard
+      // Default to admin dashboard for successful auth
       return `${baseUrl}/admin`;
     },
   },
