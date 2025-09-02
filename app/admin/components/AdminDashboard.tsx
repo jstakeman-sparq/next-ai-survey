@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
+// import { useSession } from "next-auth/react"
+// import { useRouter } from "next/navigation"
 import AdminHeader from "./AdminHeader"
 import SurveyForm from "./SurveyForm"
 import SurveyList from "./SurveyList"
@@ -15,14 +15,6 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
   // const { data: session, status } = useSession()
   // const router = useRouter()
   const [refreshTrigger, setRefreshTrigger] = useState(0)
-
-  // useEffect(() => {
-  //   if (status === "loading") return // Still loading
-  //   if (!session) {
-  //     router.push("/admin/login")
-  //     return
-  //   }
-  // }, [session, status, router])
 
   const handleSurveyCreated = () => {
     // Trigger refresh of survey list
