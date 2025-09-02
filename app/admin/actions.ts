@@ -1,11 +1,15 @@
 "use server"
 
 import { signOut, signIn } from "@/auth"
-import { redirect } from "next/navigation"
 
 export async function handleSignOut() {
   console.log("Sign out requested")
-  await signOut({ redirectTo: "/" })
+  try {
+    await signOut()
+  } catch (error) {
+    console.error('SignOut error:', error)
+    // Even if server signout fails, client will handle redirect
+  }
 }
 
 export async function handleSignIn(callbackUrl?: string) {

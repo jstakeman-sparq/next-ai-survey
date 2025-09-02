@@ -1,3 +1,5 @@
+"use client"
+
 import type { User } from "next-auth"
 import { handleSignOut } from "../actions"
 
@@ -32,14 +34,22 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
                   </span>
                 </div>
                 
-                <form action={handleSignOut}>
-                  <button
-                    type="submit"
-                    className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-                  >
-                    Sign out
-                  </button>
-                </form>
+                <button
+                  onClick={async () => {
+                    try {
+                      // Call server action first
+                      await handleSignOut()
+                    } catch (error) {
+                      console.error('Server signout failed:', error)
+                    } finally {
+                      // Force redirect to ensure signout is complete
+                      window.location.href = '/admin/login'
+                    }
+                  }}
+                  className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                >
+                  Sign out
+                </button>
               </>
             ) : (
               <div className="flex items-center space-x-2">
