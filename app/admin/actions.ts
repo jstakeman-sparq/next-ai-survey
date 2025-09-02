@@ -1,11 +1,11 @@
 "use server"
 
-import { signIn, signOut } from "@/auth"
-
 export async function handleSignOut() {
-  await signOut({ redirectTo: "/admin/login" })
+  console.log("Sign out requested")
+  // Temporarily disabled
 }
 
 export async function handleSignIn(callbackUrl?: string) {
-  await signIn("google", { redirectTo: callbackUrl || "/admin" })
+  console.log("Sign in requested with callback:", callbackUrl)
+  // Temporarily disabled
 }
