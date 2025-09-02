@@ -43,11 +43,8 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
               </>
             ) : (
               <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium text-gray-700">
-                  Development Mode
-                </span>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                  No Auth Required
+                <span className="text-sm font-medium text-gray-500">
+                  Loading...
                 </span>
               </div>
             )}
