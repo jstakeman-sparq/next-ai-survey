@@ -1,4 +1,4 @@
-import { signIn } from "@/auth"
+import { handleSignIn } from "../actions"
 
 interface LoginPageProps {
   searchParams: Promise<{
@@ -49,7 +49,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           <form
             action={async () => {
               "use server"
-              await signIn("google", { redirectTo: callbackUrl || "/admin" })
+              await handleSignIn(callbackUrl)
             }}
           >
             <button

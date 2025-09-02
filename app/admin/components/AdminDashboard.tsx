@@ -14,6 +14,7 @@ interface AdminDashboardProps {
 export default function AdminDashboard({ user }: AdminDashboardProps) {
   const { data: session, status } = useSession()
   const router = useRouter()
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
 
   useEffect(() => {
     if (status === "loading") return // Still loading
@@ -22,7 +23,6 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
       return
     }
   }, [session, status, router])
-  const [refreshTrigger, setRefreshTrigger] = useState(0)
 
   const handleSurveyCreated = () => {
     // Trigger refresh of survey list
