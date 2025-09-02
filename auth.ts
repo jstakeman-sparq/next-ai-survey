@@ -1,4 +1,5 @@
 import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
 
 // In Amplify Gen2, secrets are provided as JSON in $secrets variable
 // They are parsed in amplify.yml and written to .env.production
@@ -19,9 +20,8 @@ const getAuthUrl = () => {
 // Load environment variables (Amplify secrets are automatically injected)
 const requiredEnvVars = {
   AUTH_SECRET: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
-  AUTH_JUMPCLOUD_ISSUER: process.env.AUTH_JUMPCLOUD_ISSUER,
-  AUTH_JUMPCLOUD_ID: process.env.AUTH_JUMPCLOUD_ID,
-  AUTH_JUMPCLOUD_SECRET: process.env.AUTH_JUMPCLOUD_SECRET,
+  AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
+  AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
   AUTH_URL: getAuthUrl(),
 }
 
@@ -29,9 +29,8 @@ const requiredEnvVars = {
 console.log('NextAuth Configuration:')
 console.log('- AUTH_URL (resolved):', requiredEnvVars.AUTH_URL)
 console.log('- NODE_ENV:', process.env.NODE_ENV)
-console.log('- JumpCloud Issuer:', requiredEnvVars.AUTH_JUMPCLOUD_ISSUER || 'NOT SET')
-console.log('- JumpCloud Client ID:', requiredEnvVars.AUTH_JUMPCLOUD_ID ? 'SET' : 'NOT SET')
-console.log('- JumpCloud Client Secret:', requiredEnvVars.AUTH_JUMPCLOUD_SECRET ? 'SET' : 'NOT SET')
+console.log('- Google Client ID:', requiredEnvVars.AUTH_GOOGLE_ID ? 'SET' : 'NOT SET')
+console.log('- Google Client Secret:', requiredEnvVars.AUTH_GOOGLE_SECRET ? 'SET' : 'NOT SET')
 
 // Check for missing environment variables
 const missingEnvVars = Object.entries(requiredEnvVars)
@@ -62,33 +61,16 @@ const getSecret = () => {
   return authSecret;
 };
 
-// JumpCloud OIDC Configuration
-const jumpCloudConfig = {
-  id: "jumpcloud",
-  name: "JumpCloud",
-  type: "oidc" as const,
-  issuer: "https://oauth.id.jumpcloud.com",
-  clientId: "5b5ef794-3385-4cae-b39f-c84049ac372e",
-  clientSecret: "tWKyClyF8lLuTXqSbGmRtvLPQk",
-  authorization: {
-    params: {
-      scope: "openid email profile"
-    }
-  },
-  profile(profile: any) {
-    console.log('Profile received:', profile);
-    return {
-      id: profile.sub,
-      email: profile.email,
-      name: profile.name || profile.email,
-    }
-  },
-};
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   secret: getSecret(),
   trustHost: true,
-  providers: [jumpCloudConfig] as any,
+  providers: [
+    Google({
+      clientId: requiredEnvVars.AUTH_GOOGLE_ID!,
+      clientSecret: requiredEnvVars.AUTH_GOOGLE_SECRET!,
+    })
+  ],
   callbacks: {
     authorized: async ({ auth }) => {
       // Return true if user is authenticated
