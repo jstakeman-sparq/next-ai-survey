@@ -16,7 +16,7 @@ interface SurveyFormProps {
 }
 
 export default function SurveyForm({ onSurveyCreated }: SurveyFormProps) {
-  const session = useSession()
+  const { session } = useSession()
   const [formData, setFormData] = useState<SurveyFormData>({
     shortCode: '',
     createdBy: '',

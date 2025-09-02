@@ -1,19 +1,31 @@
+"use client"
+
 import { useState, useEffect } from "react"
-import { auth } from "@/auth"
 
 export function useSession() {
   const [session, setSession] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // In development mode, return a mock session if needed
-    if (process.env.NODE_ENV !== 'production') {
-      setSession(null)
-      return
+    async function fetchSession() {
+      try {
+        const response = await fetch('/api/auth/session')
+        if (response.ok) {
+          const sessionData = await response.json()
+          setSession(sessionData)
+        } else {
+          setSession(null)
+        }
+      } catch (error) {
+        console.error('Error fetching session:', error)
+        setSession(null)
+      } finally {
+        setLoading(false)
+      }
     }
 
-    // In production, get the actual session
-    auth().then(setSession).catch(() => setSession(null))
+    fetchSession()
   }, [])
 
-  return session
+  return { session, loading }
 }
