@@ -39,8 +39,8 @@ export default function SurveyList() {
   const [deletingSurveyId, setDeletingSurveyId] = useState<string | null>(null)
   
   const adminEmails = ['jackson.stakeman@teamsparq.com', 'derek.perry@teamsparq.com']
-  const userEmail = session?.user?.email
-  const isAdmin = userEmail && adminEmails.includes(userEmail)
+  const userEmail = session?.user?.email?.toLowerCase()
+  const isAdmin = userEmail && adminEmails.map(email => email.toLowerCase()).includes(userEmail)
   const listTitle = isAdmin ? "Recent Surveys" : "Your Recent Surveys"
 
   const deleteSurvey = async (surveyId: string) => {
@@ -75,6 +75,7 @@ export default function SurveyList() {
   const loadSurveys = async () => {
     try {
       console.log('🔍 Starting survey fetch...')
+      console.log('🔍 Session state:', { session, userEmail, isAdmin, adminEmails })
       setIsLoading(true)
       setError(null)
       
@@ -122,13 +123,16 @@ export default function SurveyList() {
       // Filter surveys by user email unless user is admin
       const filteredSurveys = isAdmin 
         ? transformedSurveys 
-        : transformedSurveys.filter(survey => survey.createdBy === userEmail)
+        : transformedSurveys.filter(survey => survey.createdBy?.toLowerCase() === userEmail)
 
       console.log('🔍 Filtered surveys:', {
         isAdmin,
         userEmail,
+        adminEmails,
         originalCount: transformedSurveys.length,
-        filteredCount: filteredSurveys.length
+        filteredCount: filteredSurveys.length,
+        allCreatedByValues: transformedSurveys.map(s => s.createdBy),
+        filteredSurveys: filteredSurveys
       })
 
       setSurveys(filteredSurveys)
@@ -142,8 +146,10 @@ export default function SurveyList() {
   }
 
   useEffect(() => {
-    loadSurveys()
-  }, [])
+    if (session) {
+      loadSurveys()
+    }
+  }, [session])
 
   if (isLoading) {
     return (
