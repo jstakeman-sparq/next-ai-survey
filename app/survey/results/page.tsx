@@ -69,14 +69,142 @@ const ResultsPageContent: React.FC = () => {
   };
 
   const handleGeneratePDF = () => {
-    // TODO: Implement PDF generation
-    alert('PDF generation will be implemented in the next phase');
+    // Dynamic import to avoid SSR issues
+    import('jspdf').then((jsPDF) => {
+      if (!cohortResult || !answers) return;
+
+      const doc = new jsPDF.default();
+      const pageWidth = doc.internal.pageSize.width;
+      const margin = 20;
+      const lineHeight = 7;
+      let currentY = 30;
+
+      // Helper function to add text with word wrap
+      const addText = (text: string, x: number, y: number, options: any = {}) => {
+        const maxWidth = options.maxWidth || (pageWidth - 2 * margin);
+        const lines = doc.splitTextToSize(text, maxWidth);
+        doc.text(lines, x, y);
+        return y + (lines.length * lineHeight);
+      };
+
+      // Helper function to check if we need a new page
+      const checkNewPage = (requiredHeight: number) => {
+        if (currentY + requiredHeight > doc.internal.pageSize.height - margin) {
+          doc.addPage();
+          currentY = margin;
+        }
+      };
+
+      // Title
+      doc.setFontSize(24);
+      doc.setFont(undefined, 'bold');
+      currentY = addText('AI Readiness Assessment Report', margin, currentY);
+      currentY += 10;
+
+      // Date
+      doc.setFontSize(12);
+      doc.setFont(undefined, 'normal');
+      currentY = addText(`Generated on: ${new Date().toLocaleDateString()}`, margin, currentY);
+      currentY += 15;
+
+      // Cohort Result Section
+      checkNewPage(50);
+      doc.setFontSize(18);
+      doc.setFont(undefined, 'bold');
+      currentY = addText('Assessment Result', margin, currentY);
+      currentY += 10;
+
+      doc.setFontSize(16);
+      doc.setFont(undefined, 'bold');
+      currentY = addText(`Cohort: ${cohortResult.name}`, margin, currentY);
+      currentY += 5;
+
+      const cohortInfo = cohortDefinitions[cohortResult.name];
+      doc.setFontSize(12);
+      doc.setFont(undefined, 'normal');
+      currentY = addText(cohortInfo.description, margin, currentY, { maxWidth: pageWidth - 2 * margin });
+      currentY += 15;
+
+      // Response Distribution
+      checkNewPage(40);
+      doc.setFontSize(14);
+      doc.setFont(undefined, 'bold');
+      currentY = addText('Response Distribution', margin, currentY);
+      currentY += 8;
+
+      doc.setFontSize(11);
+      doc.setFont(undefined, 'normal');
+      currentY = addText(`A Responses: ${cohortResult.distribution.A}`, margin, currentY);
+      currentY = addText(`B Responses: ${cohortResult.distribution.B}`, margin, currentY);
+      currentY = addText(`C Responses: ${cohortResult.distribution.C}`, margin, currentY);
+      currentY = addText(`D Responses: ${cohortResult.distribution.D}`, margin, currentY);
+      currentY += 15;
+
+      // Detailed Responses
+      checkNewPage(80);
+      doc.setFontSize(14);
+      doc.setFont(undefined, 'bold');
+      currentY = addText('Detailed Responses', margin, currentY);
+      currentY += 8;
+
+      const dimensions = getDimensionNames();
+      dimensions.forEach((dimension, index) => {
+        checkNewPage(15);
+        const questionId = index + 1;
+        const answer = answers[questionId];
+        
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'bold');
+        currentY = addText(`${dimension}:`, margin, currentY);
+        
+        doc.setFont(undefined, 'normal');
+        currentY = addText(`Answer ${answer}`, margin + 5, currentY);
+        currentY += 3;
+      });
+
+      currentY += 10;
+
+      // Next Steps Section
+      checkNewPage(100);
+      doc.setFontSize(14);
+      doc.setFont(undefined, 'bold');
+      currentY = addText('Recommended Next Steps', margin, currentY);
+      currentY += 8;
+
+      doc.setFontSize(11);
+      doc.setFont(undefined, 'normal');
+      cohortInfo.nextSteps.forEach((step, index) => {
+        checkNewPage(15);
+        currentY = addText(`${index + 1}. ${step}`, margin, currentY, { maxWidth: pageWidth - 2 * margin });
+        currentY += 5;
+      });
+
+      currentY += 10;
+
+      // Conversation Starters
+      checkNewPage(80);
+      doc.setFontSize(14);
+      doc.setFont(undefined, 'bold');
+      currentY = addText('Conversation Starters', margin, currentY);
+      currentY += 8;
+
+      doc.setFontSize(11);
+      doc.setFont(undefined, 'normal');
+      cohortInfo.conversationStarters.forEach((starter, index) => {
+        checkNewPage(15);
+        currentY = addText(`• ${starter}`, margin, currentY, { maxWidth: pageWidth - 2 * margin });
+        currentY += 5;
+      });
+
+      // Save the PDF
+      const fileName = `AI_Readiness_Assessment_${cohortResult.name.replace(/\s+/g, '_')}_${new Date().getTime()}.pdf`;
+      doc.save(fileName);
+    }).catch((error) => {
+      console.error('Error generating PDF:', error);
+      alert('Error generating PDF. Please try again.');
+    });
   };
 
-  const handleEmailReport = () => {
-    // TODO: Implement email functionality
-    alert('Email functionality will be implemented in the next phase');
-  };
 
   if (loading) {
     return (
@@ -226,7 +354,7 @@ const ResultsPageContent: React.FC = () => {
         <div className="bg-white rounded-2xl shadow-lg p-8 lg:p-12">
           <h3 className="text-2xl font-semibold text-gray-900 mb-6">Next Steps</h3>
           
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="flex justify-center">
             <button
               onClick={handleGeneratePDF}
               className="flex items-center justify-center bg-orange-500 text-white px-6 py-4 rounded-lg font-semibold text-lg hover:bg-orange-600 transition-colors"
@@ -236,26 +364,21 @@ const ResultsPageContent: React.FC = () => {
               </svg>
               Generate PDF Report
             </button>
-            
-            <button
-              onClick={handleEmailReport}
-              className="flex items-center justify-center border-2 border-orange-500 text-orange-500 px-6 py-4 rounded-lg font-semibold text-lg hover:bg-orange-500 hover:text-white transition-colors"
-            >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              Email Report
-            </button>
           </div>
 
           <div className="mt-8 pt-6 border-t border-gray-200">
             <div className="flex flex-col sm:flex-row gap-4">
-              <button
-                onClick={() => router.push(shortCode ? `/survey?code=${shortCode}` : '/survey')}
+              <a
+                href="http://localhost:3001/case-studies/using-ai-to-solve-a-stadiums-biggest-entry-headache"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition-colors"
               >
-                Take Another Assessment
-              </button>
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                Read Case Study
+              </a>
               
               <button
                 onClick={() => router.push('/')}

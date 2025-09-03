@@ -6,6 +6,8 @@ import { generateClient } from 'aws-amplify/data'
 import type { Schema } from '@/amplify/data/resource'
 import outputs from '@/amplify_outputs.json'
 import { useSession } from "../../hooks/useSession"
+import { determineCohort } from "@/lib/cohort-analysis"
+import type { SurveyAnswers } from "@/types/survey"
 
 // Configure Amplify
 Amplify.configure(outputs)
@@ -29,6 +31,7 @@ interface Survey {
   createdBy: string
   createdFor: string
   companyName: string
+  cohortResult?: string
 }
 
 export default function SurveyList() {
@@ -103,17 +106,43 @@ export default function SurveyList() {
       console.log('📋 Full survey data:', surveyData)
 
       // Transform the data to match our interface
-      const transformedSurveys: Survey[] = surveyData.map(survey => ({
-        id: survey.id,
-        title: survey.title || '',
-        type: survey.type || undefined,
-        shortCode: survey.shortCode || '',
-        status: (survey.status as 'sent' | 'started' | 'completed') || 'sent',
-        createdAt: survey.createdAt,
-        createdBy: survey.createdBy || 'Unknown',
-        createdFor: survey.createdFor || 'Unknown',
-        companyName: survey.companyName || 'Unknown'
-      }))
+      const transformedSurveys: Survey[] = await Promise.all(
+        surveyData.map(async (survey) => {
+          let cohortResult: string | undefined;
+          
+          // For completed surveys, fetch responses and calculate cohort
+          if (survey.status === 'completed') {
+            try {
+              const { data: responses } = await client.models.SurveyResponse.list({
+                filter: { surveyId: { eq: survey.id } }
+              });
+              
+              if (responses && responses.length > 0) {
+                const responseData = responses[0];
+                const answers = responseData.responses as SurveyAnswers;
+                const cohort = determineCohort(answers);
+                cohortResult = cohort.name;
+                console.log('📊 Calculated cohort for survey:', survey.id, cohortResult);
+              }
+            } catch (error) {
+              console.error('❌ Error fetching responses for survey:', survey.id, error);
+            }
+          }
+          
+          return {
+            id: survey.id,
+            title: survey.title || '',
+            type: survey.type || undefined,
+            shortCode: survey.shortCode || '',
+            status: (survey.status as 'sent' | 'started' | 'completed') || 'sent',
+            createdAt: survey.createdAt,
+            createdBy: survey.createdBy || 'Unknown',
+            createdFor: survey.createdFor || 'Unknown',
+            companyName: survey.companyName || 'Unknown',
+            cohortResult
+          };
+        })
+      )
 
       console.log('✅ Transformed surveys:', {
         count: transformedSurveys.length,
@@ -259,6 +288,11 @@ export default function SurveyList() {
                 <p className="text-sm text-gray-500">
                   Short Code: <span className="font-mono font-medium">{survey.shortCode}</span>
                 </p>
+                {survey.status === 'completed' && survey.cohortResult && (
+                  <p className="text-sm font-medium text-indigo-700">
+                    Result: {survey.cohortResult}
+                  </p>
+                )}
                 <div className="flex space-x-4 text-xs text-gray-400">
                   <span>From: {survey.createdBy}</span>
                   <span>To: {survey.createdFor}</span>
