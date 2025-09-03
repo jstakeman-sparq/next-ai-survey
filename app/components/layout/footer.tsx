@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Script from "next/script"
 
 interface FooterProps {
   onOpenContactModal?: () => void
@@ -70,6 +71,16 @@ export function Footer({ onOpenContactModal }: FooterProps) {
           </div>
         </div>
       </div>
+      <Script>
+  {`(function (w,d,o,u,a,m) {
+      w[o]=w[o]||function(){(w[o].q=w[o].q||[]).push(arguments);
+      },w[o].e=1*new Date();w[o].u=u;a=d.createElement('script'),
+      m=d.getElementsByTagName('script')[0];a.async=1;
+      a.src=u+'/mcfx.js';m.parentNode.insertBefore(a, m);
+    })(window, document, 'mcfx', 'https://tsparq.teamsparq.com');
+  mcfx('create', 44632);`}
+</Script>
+<script type="text/javascript" async src="//cdn.leadmanagerfx.com/phone/js/44632"></script>
     </footer>
   )
 }

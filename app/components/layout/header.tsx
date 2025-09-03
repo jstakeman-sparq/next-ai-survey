@@ -13,20 +13,7 @@ export function Header() {
             Sparq
           </Link>
           
-          <nav className="hidden md:flex items-center gap-8">
-            <Link 
-              href="/case-studies" 
-              className="text-white hover:text-brand-cta transition-colors font-medium"
-            >
-              Case Studies
-            </Link>
-            <Link 
-              href="/survey" 
-              className="text-white hover:text-brand-cta transition-colors font-medium"
-            >
-              AI Assessment
-            </Link>
-          </nav>
+
         </div>
       </div>
     </header>

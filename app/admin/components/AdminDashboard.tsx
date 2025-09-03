@@ -76,7 +76,10 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
             
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                Existing Surveys
+                {session?.user?.email && ['jackson.stakeman@teamsparq.com', 'derek.perry@teamsparq.com'].includes(session.user.email) 
+                  ? 'All Surveys' 
+                  : 'Your Surveys'
+                }
               </h2>
               <SurveyList key={refreshTrigger} />
             </div>

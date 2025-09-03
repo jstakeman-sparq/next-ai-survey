@@ -70,7 +70,8 @@ export default function SurveyForm({ onSurveyCreated }: SurveyFormProps) {
         return
       }
       
-      setMessage({ type: 'success', text: 'Survey created successfully!' })
+      const surveyUrl = `${window.location.origin}/survey?code=${formData.shortCode}`
+      setMessage({ type: 'success', text: `Survey created successfully! Survey URL: ${surveyUrl}` })
       setFormData({
         shortCode: generateShortCode(),
         createdBy: session?.user?.email || '',

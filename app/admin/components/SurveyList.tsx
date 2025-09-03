@@ -5,6 +5,7 @@ import { Amplify } from 'aws-amplify'
 import { generateClient } from 'aws-amplify/data'
 import type { Schema } from '@/amplify/data/resource'
 import outputs from '@/amplify_outputs.json'
+import { useSession } from "../../hooks/useSession"
 
 // Configure Amplify
 Amplify.configure(outputs)
@@ -31,9 +32,45 @@ interface Survey {
 }
 
 export default function SurveyList() {
+  const { session } = useSession()
   const [surveys, setSurveys] = useState<Survey[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [deletingSurveyId, setDeletingSurveyId] = useState<string | null>(null)
+  
+  const adminEmails = ['jackson.stakeman@teamsparq.com', 'derek.perry@teamsparq.com']
+  const userEmail = session?.user?.email
+  const isAdmin = userEmail && adminEmails.includes(userEmail)
+  const listTitle = isAdmin ? "Recent Surveys" : "Your Recent Surveys"
+
+  const deleteSurvey = async (surveyId: string) => {
+    if (!window.confirm('Are you sure you want to delete this survey? This action cannot be undone.')) {
+      return
+    }
+
+    try {
+      setDeletingSurveyId(surveyId)
+      console.log('🗑️ Deleting survey:', surveyId)
+      
+      const { errors } = await client.models.Survey.delete({ id: surveyId })
+      
+      if (errors) {
+        console.error('❌ Error deleting survey:', errors)
+        alert('Failed to delete survey. Please try again.')
+        return
+      }
+      
+      console.log('✅ Survey deleted successfully')
+      // Remove the survey from the local state
+      setSurveys(prev => prev.filter(survey => survey.id !== surveyId))
+      
+    } catch (err) {
+      console.error('💥 Error deleting survey:', err)
+      alert('Failed to delete survey. Please try again.')
+    } finally {
+      setDeletingSurveyId(null)
+    }
+  }
 
   const loadSurveys = async () => {
     try {
@@ -82,7 +119,19 @@ export default function SurveyList() {
         surveys: transformedSurveys
       })
 
-      setSurveys(transformedSurveys)
+      // Filter surveys by user email unless user is admin
+      const filteredSurveys = isAdmin 
+        ? transformedSurveys 
+        : transformedSurveys.filter(survey => survey.createdBy === userEmail)
+
+      console.log('🔍 Filtered surveys:', {
+        isAdmin,
+        userEmail,
+        originalCount: transformedSurveys.length,
+        filteredCount: filteredSurveys.length
+      })
+
+      setSurveys(filteredSurveys)
     } catch (err) {
       console.error('💥 Error loading surveys:', err)
       setError('Failed to load surveys')
@@ -163,7 +212,7 @@ export default function SurveyList() {
   return (
     <div className="bg-white shadow rounded-lg">
       <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-        <h3 className="text-lg font-medium text-gray-900">Recent Surveys</h3>
+        <h3 className="text-lg font-medium text-gray-900">{listTitle}</h3>
         <button
           onClick={() => loadSurveys()}
           disabled={isLoading}
@@ -222,6 +271,24 @@ export default function SurveyList() {
                 }`}>
                   {survey.status}
                 </span>
+                {isAdmin && (
+                  <button
+                    onClick={() => deleteSurvey(survey.id)}
+                    disabled={deletingSurveyId === survey.id}
+                    className="text-red-400 hover:text-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Delete survey"
+                  >
+                    {deletingSurveyId === survey.id ? (
+                      <svg className="h-5 w-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                    ) : (
+                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    )}
+                  </button>
+                )}
                 <button className="text-gray-400 hover:text-gray-600">
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
