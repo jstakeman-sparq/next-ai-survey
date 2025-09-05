@@ -281,7 +281,11 @@ const ResultsPageContent: React.FC = () => {
           <div className="text-center mb-8">
             <div className={`bg-${cohortInfo.color}-50 border-2 border-${cohortInfo.color}-200 rounded-2xl p-8 mb-6`}>
               <div className="flex flex-col items-center">
-                <div dangerouslySetInnerHTML={{ __html: cohortInfo.icon }} />
+                <img 
+                  src={cohortInfo.icon} 
+                  alt={`${cohortResult.name} icon`}
+                  className="w-16 h-16 object-contain"
+                />
                 <h3 className={`text-3xl font-bold text-${cohortInfo.color}-700 mt-4 mb-2`}>
                   {cohortResult.name}
                 </h3>
