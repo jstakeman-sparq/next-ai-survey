@@ -97,43 +97,43 @@ const ResultsPageContent: React.FC = () => {
 
       // Title
       doc.setFontSize(24);
-      doc.setFont(undefined, 'bold');
+      doc.setFont('helvetica', 'bold');
       currentY = addText('AI Readiness Assessment Report', margin, currentY);
       currentY += 10;
 
       // Date
       doc.setFontSize(12);
-      doc.setFont(undefined, 'normal');
+      doc.setFont('helvetica', 'normal');
       currentY = addText(`Generated on: ${new Date().toLocaleDateString()}`, margin, currentY);
       currentY += 15;
 
       // Cohort Result Section
       checkNewPage(50);
       doc.setFontSize(18);
-      doc.setFont(undefined, 'bold');
+      doc.setFont('helvetica', 'bold');
       currentY = addText('Assessment Result', margin, currentY);
       currentY += 10;
 
       doc.setFontSize(16);
-      doc.setFont(undefined, 'bold');
+      doc.setFont('helvetica', 'bold');
       currentY = addText(`Cohort: ${cohortResult.name}`, margin, currentY);
       currentY += 5;
 
       const cohortInfo = cohortDefinitions[cohortResult.name];
       doc.setFontSize(12);
-      doc.setFont(undefined, 'normal');
+      doc.setFont('helvetica', 'normal');
       currentY = addText(cohortInfo.description, margin, currentY, { maxWidth: pageWidth - 2 * margin });
       currentY += 15;
 
       // Response Distribution
       checkNewPage(40);
       doc.setFontSize(14);
-      doc.setFont(undefined, 'bold');
+      doc.setFont('helvetica', 'bold');
       currentY = addText('Response Distribution', margin, currentY);
       currentY += 8;
 
       doc.setFontSize(11);
-      doc.setFont(undefined, 'normal');
+      doc.setFont('helvetica', 'normal');
       currentY = addText(`A Responses: ${cohortResult.distribution.A}`, margin, currentY);
       currentY = addText(`B Responses: ${cohortResult.distribution.B}`, margin, currentY);
       currentY = addText(`C Responses: ${cohortResult.distribution.C}`, margin, currentY);
@@ -143,7 +143,7 @@ const ResultsPageContent: React.FC = () => {
       // Detailed Responses
       checkNewPage(80);
       doc.setFontSize(14);
-      doc.setFont(undefined, 'bold');
+      doc.setFont('helvetica', 'bold');
       currentY = addText('Detailed Responses', margin, currentY);
       currentY += 8;
 
@@ -154,10 +154,10 @@ const ResultsPageContent: React.FC = () => {
         const answer = answers[questionId];
         
         doc.setFontSize(12);
-        doc.setFont(undefined, 'bold');
+        doc.setFont('helvetica', 'bold');
         currentY = addText(`${dimension}:`, margin, currentY);
         
-        doc.setFont(undefined, 'normal');
+        doc.setFont('helvetica', 'normal');
         currentY = addText(`Answer ${answer}`, margin + 5, currentY);
         currentY += 3;
       });
@@ -167,12 +167,12 @@ const ResultsPageContent: React.FC = () => {
       // Next Steps Section
       checkNewPage(100);
       doc.setFontSize(14);
-      doc.setFont(undefined, 'bold');
+      doc.setFont('helvetica', 'bold');
       currentY = addText('Recommended Next Steps', margin, currentY);
       currentY += 8;
 
       doc.setFontSize(11);
-      doc.setFont(undefined, 'normal');
+      doc.setFont('helvetica', 'normal');
       cohortInfo.nextSteps.forEach((step, index) => {
         checkNewPage(15);
         currentY = addText(`${index + 1}. ${step}`, margin, currentY, { maxWidth: pageWidth - 2 * margin });
@@ -184,12 +184,12 @@ const ResultsPageContent: React.FC = () => {
       // Conversation Starters
       checkNewPage(80);
       doc.setFontSize(14);
-      doc.setFont(undefined, 'bold');
+      doc.setFont('helvetica', 'bold');
       currentY = addText('Conversation Starters', margin, currentY);
       currentY += 8;
 
       doc.setFontSize(11);
-      doc.setFont(undefined, 'normal');
+      doc.setFont('helvetica', 'normal');
       cohortInfo.conversationStarters.forEach((starter, index) => {
         checkNewPage(15);
         currentY = addText(`• ${starter}`, margin, currentY, { maxWidth: pageWidth - 2 * margin });
